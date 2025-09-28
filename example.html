@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html>
+<head>
+	<title>html.js test</title>
+
+	<!-- <script src="./html.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/gh/duckafire/html.js@online/html.js"></script>
+
+	<style>
+		body
+		{
+			background-color: #292929;
+			color: #bfbfbf;
+		}
+
+		.hello-world
+		{
+			margin: 0;
+			font-size: 10em;
+		}
+
+		#dest0 { background-color: #803; }
+		#dest1 { background-color: #083; }
+		#dest2 { background-color: #038; }
+		#dest3 { background-color: #617; }
+		#dest4 { background-color: #167; }
+
+		.dest
+		{
+			height: min-content;
+			margin: 1em;
+			padding: 1em;
+		}
+	</style>
+</head>
+<body>
+	<div id="dest0" class="dest"></div>
+	<div id="dest1" class="dest"></div>
+	<div id="dest2" class="dest"></div>
+	<div id="dest3" class="dest"></div>
+	<div id="dest4" class="dest"></div>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		declare_htmljs();
+
+		document.getElementById("dest0").appendChild(
+			div(
+				null,
+				h1({className: "hello-world"},
+					"Hello world!",
+				h1),
+				p(
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					br(), // it breaks the line
+					br(), // it "gives" an empty line
+					"Potenti ultricies inceptos, quam facilisis aliquam vehicula",
+				p),
+			div)
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		declare_htmljs("ELEM");
+
+		document.getElementById("dest1").appendChild(
+			ELEMdiv(
+				null,
+				ELEMh1({className: "hello-world"},
+					"Hello world!",
+				ELEMh1),
+				ELEMp(
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					ELEMbr(),
+					ELEMbr(),
+					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+				ELEMp),
+			ELEMdiv)
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		const FOO = declare_htmljs(null, true);
+
+		document.getElementById("dest2").appendChild(
+			FOO.div(
+				null,
+				FOO.h1({className: "hello-world"},
+					"Hello world!",
+				FOO.h1),
+				FOO.p(
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					FOO.br(),
+					FOO.br(),
+					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+				FOO.p),
+			FOO.div)
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		const FOO1 = declare_htmljs("bar_");
+		htmljs_set_ignore_last(false);
+
+		document.getElementById("dest3").appendChild(
+			FOO1.bar_div(
+				null,
+				FOO1.bar_h1({className: "hello-world"},
+					"Hello world!",
+				),
+				FOO1.bar_p(
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					FOO1.bar_br(),
+					FOO1.bar_br(),
+					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+				),
+			),
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		// it is possible, but I do not recommend
+		const FOO2 = declare_htmljs("000");
+		htmljs_set_ignore_last(true);
+
+		document.getElementById("dest4").appendChild(
+			FOO2["000div"](
+				null,
+				FOO2["000h1"]({className: "hello-world"},
+					"Hello world!",
+				FOO2["000h1"]),
+				FOO2["000p"](
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					FOO2["000br"](),
+					FOO2["000br"](),
+					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+				FOO2["000p"]),
+			FOO2["000div"])
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+</body>
+</html>
