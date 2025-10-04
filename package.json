@@ -1,8 +1,8 @@
 {
   "name": "@duckafire/html.js",
   "author": "duckafire",
-  "version": "0.0.2",
-  "license": "MIT",
+  "version": "0.0.2-1",
+  "license": "Zlib",
   "description": "Just a very simple components library.",
   "keywords": ["front-end", "client", "html", "dom", "light", "components", "web", "simple", "minimalist", "easy"],
   "devDependencies": {
