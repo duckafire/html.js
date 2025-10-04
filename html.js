@@ -20,6 +20,7 @@
 
 "use strict";
 let __htmljs_ignore_last__ = 1;
+const __HTMLJS_FIRST_CONTAINER_TAG_ID__ = 12;
 
 const __htmljs_is_not_object__ = (thing) =>
 {
@@ -27,17 +28,23 @@ const __htmljs_is_not_object__ = (thing) =>
 }
 
 const __htmljs_element_tags__ = [
-	"a", "abbr", "address", "area", "article", "audio", "b", "base", "bdi", "bdo",
-	"blockquote", "body", "br", "button", "canvas", "caption", "cite", "code", "col",
-	"colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "div",
-	"dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2",
-	"h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe",
-	"img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark",
-	"meta", "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output",
-	"p", "picture", "pre", "progress", "q", "rp", "rt", "ruby", "samp", "script",
-	"section", "select", "small", "source", "span", "strong", "sub", "summary", "sup",
-	"table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time",
-	"title", "tr", "track", "ul", "var", "video", "wbr",
+	// NO-containers
+	"area", "base", "br", "col", "hr", "img", "input", "link",
+	"meta", "source", "track", "wbr", // wbr id == 11
+
+	// containers
+	"a", "abbr", "address", "article", "audio", "b", "bdi", "bdo",
+	"blockquote", "body", "button", "canvas", "caption", "cite",
+	"code", "colgroup", "data", "datalist", "dd", "del", "details",
+	"dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption",
+	"figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6",
+	"head", "header", "hgroup", "html", "i", "iframe", "ins", "kbd",
+	"label", "legend", "li", "main", "map", "mark", "meter", "nav",
+	"noscript", "object", "ol", "optgroup", "option", "output", "p",
+	"picture", "pre", "progress", "q", "rp", "rt", "ruby", "samp",
+	"script", "section", "select", "small", "span", "strong", "sub",
+	"summary", "sup", "table", "tbody", "td", "template", "textarea",
+	"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
 ];
 
 const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
@@ -103,8 +110,12 @@ const declare_htmljs = (prefix, createObject) =>
 	const DEST = createObject ? {} : window;
 	const PREF = prefix || "";
 
-	for(const elementTag of __htmljs_element_tags__)
-		DEST[ PREF + elementTag ] = (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
+	__htmljs_element_tags__.forEach((elementTag, id) =>
+	{
+		DEST[ PREF + elementTag ] = (id < __HTMLJS_FIRST_CONTAINER_TAG_ID__)
+			? (properties)              => __htmljs_core__(elementTag, properties)
+			: (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
+	});
 
 	return DEST;
 };
