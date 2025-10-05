@@ -17,7 +17,7 @@ This is a web component library, thought to be:
 Just copy and paste this code chunk in your HTML file:
 
 ``` html
-<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@0.0.2-2/html.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@0.0.2-3/html.min.js"></script>
 
 ```
 
@@ -28,12 +28,12 @@ After this, run the JavaScript code below:
 
 ``` html
 <script>
-	get_htmljs();
+	declare_htmljs();
 </script>
 ```
 
 > [!NOTE]
-> See more about `get_htmljs` [here](#start-library).
+> See more about `declare_htmljs` [here](#start-library).
 
 ## How to use
 
@@ -42,7 +42,7 @@ After this, run the JavaScript code below:
 As mentioned earlier on, it is necessary call the functions bellow to
 start the library:
 
-* `{} get_htmljs( [prefix: string = ""], [createObject: boolean = false] )`
+* `{} declare_htmljs( [prefix: string = ""], [createObject: boolean = false] )`
 	* `prefix`: prefixs the name of the functions/methods that are
 	            used to create the elements.
 	* `createObject`: specifics that the methods have to be declared
@@ -89,8 +89,8 @@ will explain their structure.
 	              string, a *text node* will added to the element.
 	* `closeTag`: an optional thing, to explicit the end of the element creation. I
 	              recommend that it to be equal the itself function (like the previous
-	              example). See [this](#closing-the-element-creation) to learn how to disable
-	              this optional parameter.
+	              example). See [this](#closing-the-element-creation) to learn how to
+	              disable this optional parameter.
 
 > [!IMPORTANT]
 > Deprecated tags are not available.
