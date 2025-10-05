@@ -17,7 +17,7 @@ This is a web component library, thought to be:
 Just copy and paste this code chunk in your HTML file:
 
 ``` html
-<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@0.0.2/html.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@0.0.2-2/html.min.js"></script>
 
 ```
 
