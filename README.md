@@ -42,12 +42,14 @@ After this, run the JavaScript code below:
 As mentioned earlier on, it is necessary call the functions bellow to
 start the library:
 
-* `{} declare_htmljs( [prefix: string = ""], [createObject: boolean = false] )`
+* `{} declare_htmljs( [prefix: string = ""], [createObject: boolean = false], [useUpperCase: boolean = false] )`
 	* `prefix`: prefixs the name of the functions/methods that are
 	            used to create the elements.
 	* `createObject`: specifics that the methods have to be declared
 	                  in a new object, that it will be created by the
 	                  functions.
+	* `useUpperCase`: specifics that the methods names have to be formated by
+	                  upper case characters, instead lower case characteres.
 
 > [!NOTE]
 > If `createObject != true`, the methods will be declared in `window`, that
