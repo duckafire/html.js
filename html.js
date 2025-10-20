@@ -1,3 +1,5 @@
+"use strict";
+
 // Zlib License
 //
 // Copyright (C) 2025 DuckAfire <duckafire.github.io/nest>
@@ -18,9 +20,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-"use strict";
 let __htmljs_ignore_last__ = 1;
-const __HTMLJS_FIRST_CONTAINER_TAG_ID__ = 12;
 
 const __htmljs_is_not_object__ = (thing) =>
 {
@@ -30,7 +30,8 @@ const __htmljs_is_not_object__ = (thing) =>
 const __htmljs_element_tags__ = [
 	// NO-containers
 	"area", "base", "br", "col", "hr", "img", "input", "link",
-	"meta", "source", "track", "wbr", // wbr id == 11
+	"meta", "source", "track", "wbr",
+	// wbr id == 11, so the first "container" is #12
 
 	// containers
 	"a", "abbr", "address", "article", "audio", "b", "bdi", "bdo",
@@ -105,16 +106,20 @@ const htmljs_set_ignore_last = (ignore) =>
 	__htmljs_ignore_last__ = ignore ? 1 : 0;
 }
 
-const declare_htmljs = (prefix, createObject) =>
+const declare_htmljs = (prefix, createObject, useUpperCase) =>
 {
 	const DEST = createObject ? {} : window;
 	const PREF = prefix || "";
+	let tag;
 
 	__htmljs_element_tags__.forEach((elementTag, id) =>
 	{
-		DEST[ PREF + elementTag ] = (id < __HTMLJS_FIRST_CONTAINER_TAG_ID__)
-			? (properties)              => __htmljs_core__(elementTag, properties)
-			: (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
+		tag = PREF + elementTag;
+
+		DEST[ (useUpperCase ? tag.toUpperCase() : tag) ] =
+			(id < 12) // 12 == first "container"
+				? (properties)              => __htmljs_core__(elementTag, properties)
+				: (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
 	});
 
 	return DEST;
