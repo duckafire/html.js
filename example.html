@@ -25,6 +25,7 @@
 		#dest2 { background-color: #038; }
 		#dest3 { background-color: #617; }
 		#dest4 { background-color: #167; }
+		#dest5 { background-color: #671; }
 
 		.dest
 		{
@@ -40,6 +41,7 @@
 	<div id="dest2" class="dest"></div>
 	<div id="dest3" class="dest"></div>
 	<div id="dest4" class="dest"></div>
+	<div id="dest5" class="dest"></div>
 
 	<!-- =========================================================================== -->
 
@@ -151,6 +153,28 @@
 					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
 				FOO2["000p"]),
 			FOO2["000div"])
+		);
+	</script>
+
+	<!-- =========================================================================== -->
+
+	<script>
+		declare_htmljs(null, false, true);
+
+		document.getElementById("dest5").appendChild(
+			DIV(
+				null,
+				H1({className: "hello-world"},
+					"Hello world!",
+				H1),
+				P(
+					null,
+					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
+					BR(),
+					BR(),
+					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+				P),
+			DIV)
 		);
 	</script>
 
