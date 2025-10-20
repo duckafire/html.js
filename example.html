@@ -49,13 +49,11 @@
 		declare_htmljs();
 
 		document.getElementById("dest0").appendChild(
-			div(
-				null,
-				h1({className: "hello-world"},
+			div( null,
+				h1( {className: "hello-world"},
 					"Hello world!",
 				h1),
-				p(
-					null,
+				p( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					br(), // it breaks the line
 					br(), // it "gives" an empty line
@@ -71,13 +69,11 @@
 		declare_htmljs("ELEM");
 
 		document.getElementById("dest1").appendChild(
-			ELEMdiv(
-				null,
-				ELEMh1({className: "hello-world"},
+			ELEMdiv( null,
+				ELEMh1( {className: "hello-world"},
 					"Hello world!",
 				ELEMh1),
-				ELEMp(
-					null,
+				ELEMp( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					ELEMbr(),
 					ELEMbr(),
@@ -93,13 +89,11 @@
 		const FOO = declare_htmljs(null, true);
 
 		document.getElementById("dest2").appendChild(
-			FOO.div(
-				null,
-				FOO.h1({className: "hello-world"},
+			FOO.div( null,
+				FOO.h1( {className: "hello-world"},
 					"Hello world!",
 				FOO.h1),
-				FOO.p(
-					null,
+				FOO.p( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO.br(),
 					FOO.br(),
@@ -116,13 +110,11 @@
 		htmljs_set_ignore_last(false);
 
 		document.getElementById("dest3").appendChild(
-			FOO1.bar_div(
-				null,
-				FOO1.bar_h1({className: "hello-world"},
+			FOO1.bar_div( null,
+				FOO1.bar_h1( {className: "hello-world"},
 					"Hello world!",
 				),
-				FOO1.bar_p(
-					null,
+				FOO1.bar_p( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO1.bar_br(),
 					FOO1.bar_br(),
@@ -140,13 +132,11 @@
 		htmljs_set_ignore_last(true);
 
 		document.getElementById("dest4").appendChild(
-			FOO2["000div"](
-				null,
-				FOO2["000h1"]({className: "hello-world"},
+			FOO2["000div"]( null,
+				FOO2["000h1"]( {className: "hello-world"},
 					"Hello world!",
 				FOO2["000h1"]),
-				FOO2["000p"](
-					null,
+				FOO2["000p"]( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO2["000br"](),
 					FOO2["000br"](),
@@ -162,13 +152,11 @@
 		declare_htmljs(null, false, true);
 
 		document.getElementById("dest5").appendChild(
-			DIV(
-				null,
-				H1({className: "hello-world"},
+			DIV( null,
+				H1( {className: "hello-world"},
 					"Hello world!",
 				H1),
-				P(
-					null,
+				P( null,
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					BR(),
 					BR(),

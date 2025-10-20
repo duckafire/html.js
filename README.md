@@ -71,9 +71,8 @@ below:
 
 ``` js
 // create a <div> that it contains two
-// text nodes and a `<br>` element
-div(
-	null,
+// "text nodes" and a <br> element
+div( null,
 	"foo foo"
 	br();
 	"bar bar"
