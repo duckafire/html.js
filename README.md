@@ -1,5 +1,8 @@
-[html-js]: ./html.js
-[example-html]: ./example.html
+[html-js]: ./html.js "html.js source file"
+[example-html]: ./example.html "html.js example"
+[data-property]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/data-* "HTML attributes data-*"
+[aria-property]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA "Accessible Rich Internet Applications"
+[event-listeners]: https://www.w3schools.com/js/js_htmldom_eventlistener.asp "DOM Event Listeners"
 
 # html.js
 
@@ -11,6 +14,16 @@ This is a web component library, thought to be:
 * Simple to understand
 * Similar to HTML (mainly in relation to the structure)
 * Independent of preprocessor (or similar)
+
+### Topics
+
+* [Installing](#installing)
+* [How to use](#how-to-use)
+	* [Start library](#start-library)
+	* [Create an element](#create-an-element)
+	* [Closing the element creation](#closing-the-element-creation)
+	* [Special properties](#special-properties)
+	* [Other stuff](#other-stuff)
 
 ## Installing
 
@@ -43,6 +56,7 @@ As mentioned earlier on, it is necessary call the functions bellow to
 start the library:
 
 * `{} declare_htmljs( [prefix: string = ""], [createObject: boolean = false], [useUpperCase: boolean = false] )`
+* `{} declare_htmljs( [ args: object = {[prefix: string = ""], [createObject: boolean = false], [useUpperCase: boolean = false]} ] )`
 	* `prefix`: prefixs the name of the functions/methods that are
 	            used to create the elements.
 	* `createObject`: specifics that the methods have to be declared
@@ -54,6 +68,9 @@ start the library:
 > [!NOTE]
 > If `createObject != true`, the methods will be declared in `window`, that
 > it also will be returned.
+
+> [!TIP]
+> Try `declare_htmljs({useUpperCase: true})` instead `declare_html(null, false, true)`.
 
 Call any function, from this library, without call this function (probably) will
 generate an error.
@@ -114,6 +131,37 @@ functions below:
 
 > [!TIP]
 > Run [example.html][example-html] (in your browser) to see how all these work.
+
+### Special properties
+
+In addition of the *common element properties*, the `htmlProperties` support the
+properties bellow:
+
+* `dataSets`: a list of customized properties that will be prefixed by `data-`.
+
+``` js
+SPAN({ dataSets: { property: "value" } });
+```
+
+* `ariaAttributes`: a list of properties that will be prefixed by `aria-`.
+
+``` js
+SPAN({ ariaProperties: { property: "value" } });
+```
+
+* `eventListeners`: a list of events that will be added to the created element.
+
+``` js
+SPAN({ eventListeners: { event: action } });
+SPAN({ eventListeners: { event: [action0, actionN] } });
+```
+
+> [!NOTE]
+> See more about these concepts bellow:
+>
+> * [data-][data-property]
+> * [aria-][aria-property]
+> * [Event Listeners][event-listeners]
 
 ### Other stuff
 
