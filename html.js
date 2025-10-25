@@ -112,12 +112,6 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 					case "eventListeners": __htmljs_set_event_listeners__(            ELEM, PROPERTY, htmlProperties); continue;
 				}
 
-				if(ELEM[PROPERTY] === undefined)
-				{
-					__htmljs_debug_func__(new TypeError(`Invalid property (${PROPERTY}) to ${ELEM.constructor.name}.`));
-					continue;
-				}
-
 				ELEM[PROPERTY] =
 					htmlProperties[PROPERTY] == "~"
 						? PROPERTY
