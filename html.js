@@ -106,8 +106,15 @@ const htmljs_set_ignore_last = (ignore) =>
 	__htmljs_ignore_last__ = ignore ? 1 : 0;
 }
 
-const declare_htmljs = (prefix, createObject, useUpperCase) =>
+const declare_htmljs = (...args) =>
 {
+	let prefix, createObject, useUpperCase;
+
+	if(args[0] !== null && typeof args[0] == "object")
+		({prefix, createObject, useUpperCase} = args[0]);
+	else
+		[prefix, createObject, useUpperCase] = args;
+
 	const DEST = createObject ? {} : window;
 	const PREF = prefix || "";
 	let tag;
