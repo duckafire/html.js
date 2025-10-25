@@ -63,7 +63,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 				throw new TypeError(`Excepting Object to \`htmlProperties\`, instead "${typeof htmlProperties}".`);
 
 			for(const property in htmlProperties)
-				ELEM[property] = htmlProperties[property]
+				ELEM[property] = htmlProperties[property];
 		}
 
 		for(let i = 0; i < ARGS_MAX; i++)
@@ -94,7 +94,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 			}
 		}
 
-		if(textnode !== null)
+		if(textnode != "")
 			ELEM.appendChild(document.createTextNode( textnode ));
 	}
 
