@@ -93,8 +93,13 @@ div( null,
 	"foo foo"
 	br();
 	"bar bar"
+	input( {type: "text", value: "foobar", readOnly: "~"}),
 div);
 ```
+
+> [!TIP]
+> Defining a property as `"~"` makes it equal itself, in other words, `open: "~"` is
+> equal `open: "open"`.
 
 All these functions/methods have the same parameter structure, the only difference it
 is their names/identifiers, because of this, I will not to list all them here, but I
