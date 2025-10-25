@@ -21,11 +21,12 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 let __htmljs_ignore_last__ = 1;
+let __htmljs_debug_func__  = console.warn;
 
 const __htmljs_is_not_object__ = (thing) =>
 {
 	return typeof thing != "object" || Array.isArray(thing);
-}
+};
 
 const __htmljs_element_tags__ = [
 	// NO-containers
@@ -48,6 +49,41 @@ const __htmljs_element_tags__ = [
 	"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
 ];
 
+const __htmljs_check_group_type__ = (property, htmlProperties) =>
+{
+	if(__htmljs_is_not_object__( htmlProperties[property] ))
+	{
+		__htmljs_debug_func__(new TypeError(`Invalid value attributed to \`${property}\`, expecting an object.`));
+		return false;
+	}
+
+	return true;
+}
+
+const __htmljs_set_group_of_attributes__ = (prefix, elem, property, htmlProperties) =>
+{
+	if(!__htmljs_check_group_type__(property, htmlProperties))
+		return;
+
+	for(const FIELD in htmlProperties[property])
+		elem.setAttribute(prefix + "-" + FIELD, htmlProperties[property][FIELD]);
+};
+
+const __htmljs_set_event_listeners__ = (elem, property, htmlProperties) =>
+{
+	if(!__htmljs_check_group_type__(property, htmlProperties))
+		return;
+
+	for(const EVENT in htmlProperties[property])
+	{
+		if(Array.isArray( htmlProperties[property][EVENT] ))
+			for(const LAMBDA of htmlProperties[property][EVENT])
+				elem.addEventListener(EVENT, LAMBDA);
+		else
+			elem.addEventListener(EVENT, htmlProperties[property][EVENT]);
+	}
+};
+
 const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 {
 	const ELEM = document.createElement(elementTag);
@@ -60,10 +96,33 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 		if(htmlProperties !== null)
 		{
 			if(__htmljs_is_not_object__( htmlProperties ))
-				throw new TypeError(`Excepting Object to \`htmlProperties\`, instead "${typeof htmlProperties}".`);
+			{
+				__htmljs_debug_func__(new TypeError(`Excepting Object to \`htmlProperties\`, instead "${typeof htmlProperties}".`));
+				
+				// this allows to jump the for-loop below,
+				// if the Debug Mode is != 2
+				htmlProperties = {};
+			}
 
-			for(const property in htmlProperties)
-				ELEM[property] = htmlProperties[property];
+			for(const PROPERTY in htmlProperties){
+				switch(PROPERTY)
+				{
+					case "dataSets":       __htmljs_set_group_of_attributes__("data", ELEM, PROPERTY, htmlProperties); continue;
+					case "ariaAttributes": __htmljs_set_group_of_attributes__("aria", ELEM, PROPERTY, htmlProperties); continue;
+					case "eventListeners": __htmljs_set_event_listeners__(            ELEM, PROPERTY, htmlProperties); continue;
+				}
+
+				if(ELEM[PROPERTY] === undefined)
+				{
+					__htmljs_debug_func__(new TypeError(`Invalid property (${PROPERTY}) to ${ELEM.constructor.name}.`));
+					continue;
+				}
+
+				ELEM[PROPERTY] =
+					htmlProperties[PROPERTY] == "~"
+						? PROPERTY
+						: htmlProperties[PROPERTY];
+			}
 		}
 
 		for(let i = 0; i < ARGS_MAX; i++)
@@ -74,8 +133,11 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 				continue;
 			}
 
-			if(__htmljs_is_not_object__( children[i] ))
-				throw new TypeError(`Excepting Object or String to \`children[${i}]\`, instead "${typeof children[i]}".`);
+			if(!(children[i] instanceof HTMLElement))
+			{
+				__htmljs_debug_func__(new TypeError(`Excepting Object or String to \`children[${i}]\`, instead "${typeof children[i]}".`));
+				continue;
+			}
 
 			if(textnode != "")
 			{
@@ -89,7 +151,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 			}
 			catch(ex)
 			{
-				console.error(ex)
+				__htmljs_debug_func__(ex);
 				break;
 			}
 		}
@@ -104,7 +166,24 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 const htmljs_set_ignore_last = (ignore) =>
 {
 	__htmljs_ignore_last__ = ignore ? 1 : 0;
-}
+};
+
+const htmljs_set_debug_mode = (mode) =>
+{
+	const TYPE = typeof mode;
+
+	if(TYPE != "number")
+		throw new TypeError(`Invalid mode type: "${TYPE}". Use only integer numbers.`);
+
+	if(mode > 2)
+		throw new RangeError(`Invalid mode value: "${mode}". Use only 0, 1, or 2.`);
+
+	__htmljs_debug_func__ = [
+		() => {},
+		console.warn,
+		(exception) => { throw exception; }
+	][ Math.floor(mode) ];
+};
 
 const declare_htmljs = (...args) =>
 {
