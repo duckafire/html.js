@@ -21,10 +21,11 @@
 
 		document.getElementById("dest0").appendChild(
 			div( null,
-				h1( {className: "hello-world"},
+				h1( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				h1),
-				p( null,
+				input( {value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				p( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					br(), // it breaks the line
 					br(), // it "gives" an empty line
@@ -41,10 +42,11 @@
 
 		document.getElementById("dest1").appendChild(
 			ELEMdiv( null,
-				ELEMh1( {className: "hello-world"},
+				ELEMh1( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				ELEMh1),
-				ELEMp( null,
+				ELEMinput({value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				ELEMp( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					ELEMbr(),
 					ELEMbr(),
@@ -61,10 +63,11 @@
 
 		document.getElementById("dest2").appendChild(
 			FOO.div( null,
-				FOO.h1( {className: "hello-world"},
+				FOO.h1( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				FOO.h1),
-				FOO.p( null,
+				FOO.input({value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				FOO.p( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO.br(),
 					FOO.br(),
@@ -77,15 +80,17 @@
 	<!-- =========================================================================== -->
 
 	<script>
-		const FOO1 = declare_htmljs("bar_");
+		// `FOO1` points to `window` because `createObject !== true`
+		const FOO1 = declare_htmljs({prefix: "bar_"});
 		htmljs_set_ignore_last(false);
 
 		document.getElementById("dest3").appendChild(
 			FOO1.bar_div( null,
-				FOO1.bar_h1( {className: "hello-world"},
+				FOO1.bar_h1( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				),
-				FOO1.bar_p( null,
+				FOO1.bar_input({value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				FOO1.bar_p( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO1.bar_br(),
 					FOO1.bar_br(),
@@ -98,16 +103,18 @@
 	<!-- =========================================================================== -->
 
 	<script>
-		// it is possible, but I do not recommend
+		// it is possible, but I do not recommend;
+		// `FOO2` points to `window` because `createObject !== true`
 		const FOO2 = declare_htmljs("000");
 		htmljs_set_ignore_last(true);
 
 		document.getElementById("dest4").appendChild(
 			FOO2["000div"]( null,
-				FOO2["000h1"]( {className: "hello-world"},
+				FOO2["000h1"]( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				FOO2["000h1"]),
-				FOO2["000p"]( null,
+				FOO2["000input"]({value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				FOO2["000p"]( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO2["000br"](),
 					FOO2["000br"](),
@@ -120,14 +127,15 @@
 	<!-- =========================================================================== -->
 
 	<script>
-		declare_htmljs(null, false, true);
+		declare_htmljs({useUpperCase: true});
 
 		document.getElementById("dest5").appendChild(
 			DIV( null,
-				H1( {className: "hello-world"},
+				H1( {className: "hello-world", dataSets: {foo: "bar"}},
 					"Hello world!",
 				H1),
-				P( null,
+				INPUT({value: "Lorem ipsum", type: "text", readOnly: "readonly", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
+				P( {ariaAttributes: {hidden: "false"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					BR(),
 					BR(),
