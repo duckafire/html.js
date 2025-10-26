@@ -3,6 +3,8 @@
 [data-property]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/data-* "HTML attributes data-*"
 [aria-property]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA "Accessible Rich Internet Applications"
 [event-listeners]: https://www.w3schools.com/js/js_htmldom_eventlistener.asp "DOM Event Listeners"
+[style-property]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style "The HTML `style` property"
+[camel-case]: https://en.wikipedia.org/wiki/Camel_case "Understanding the camelCase"
 
 # html.js
 
@@ -115,6 +117,12 @@ will explain their structure.
 	              example). See [this](#closing-the-element-creation) to learn how to
 	              disable this optional parameter.
 
+> [!WARNING]
+> Unlike HTML and CSS, the JavaScript syntax do not support the use of the hyphen (`-`)
+> in identifiers name. So *compound properties* only can be declared:
+> * Between single/double quotes: `"padding-top"`; `"background-color"`; `"font-size"`.
+> * In [camelCase][camel-case]: `paddingTop`; `backgroundColor`; `fontSize`.
+
 > [!IMPORTANT]
 > Deprecated tags are not available.
 
@@ -161,12 +169,26 @@ SPAN({ eventListeners: { event: action } });
 SPAN({ eventListeners: { event: [action0, actionN] } });
 ```
 
+* `cssRules`: a list of CSS style rules and variables that will be added to the created
+element.
+
+``` js
+SPAN({ cssRules: { rule: value } });
+SPAN({ cssRules: { "--variable": value } });
+```
+
+> [!IMPORTANT]
+> These *compound properties* follow the same writing rules of the ***common***
+> *compound properties*. See [Create an element](#create-an-element) to more
+> information about.
+
 > [!NOTE]
 > See more about these concepts bellow:
 >
 > * [data-][data-property]
 > * [aria-][aria-property]
 > * [Event Listeners][event-listeners]
+> * [The `style` property][style-property]
 
 ### Other stuff
 
