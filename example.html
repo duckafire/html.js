@@ -21,11 +21,11 @@
 
 		document.getElementById("dest0").appendChild(
 			div( null,
-				h1( {className: "hello-world", dataSets: {foo: "bar"}},
+				h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				h1),
 				input( {value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				p( {ariaAttributes: {hidden: "false"}},
+				p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					br(), // it breaks the line
 					br(), // it "gives" an empty line
@@ -42,11 +42,11 @@
 
 		document.getElementById("dest1").appendChild(
 			ELEMdiv( null,
-				ELEMh1( {className: "hello-world", dataSets: {foo: "bar"}},
+				ELEMh1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				ELEMh1),
 				ELEMinput({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				ELEMp( {ariaAttributes: {hidden: "false"}},
+				ELEMp( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					ELEMbr(),
 					ELEMbr(),
@@ -63,11 +63,11 @@
 
 		document.getElementById("dest2").appendChild(
 			FOO.div( null,
-				FOO.h1( {className: "hello-world", dataSets: {foo: "bar"}},
+				FOO.h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				FOO.h1),
 				FOO.input({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO.p( {ariaAttributes: {hidden: "false"}},
+				FOO.p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO.br(),
 					FOO.br(),
@@ -86,11 +86,11 @@
 
 		document.getElementById("dest3").appendChild(
 			FOO1.bar_div( null,
-				FOO1.bar_h1( {className: "hello-world", dataSets: {foo: "bar"}},
+				FOO1.bar_h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				),
 				FOO1.bar_input({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO1.bar_p( {ariaAttributes: {hidden: "false"}},
+				FOO1.bar_p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO1.bar_br(),
 					FOO1.bar_br(),
@@ -110,11 +110,11 @@
 
 		document.getElementById("dest4").appendChild(
 			FOO2["000div"]( null,
-				FOO2["000h1"]( {className: "hello-world", dataSets: {foo: "bar"}},
+				FOO2["000h1"]( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				FOO2["000h1"]),
 				FOO2["000input"]({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO2["000p"]( {ariaAttributes: {hidden: "false"}},
+				FOO2["000p"]( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					FOO2["000br"](),
 					FOO2["000br"](),
@@ -131,11 +131,11 @@
 
 		document.getElementById("dest5").appendChild(
 			DIV( null,
-				H1( {className: "hello-world", dataSets: {foo: "bar"}},
+				H1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
 					"Hello world!",
 				H1),
 				INPUT({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				P( {ariaAttributes: {hidden: "false"}},
+				P( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					BR(),
 					BR(),
