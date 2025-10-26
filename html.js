@@ -84,6 +84,20 @@ const __htmljs_set_event_listeners__ = (elem, property, htmlProperties) =>
 	}
 };
 
+const __htmljs_set_css_style_rules__ = (elem, property, htmlProperties) =>
+{
+	if(!__htmljs_check_group_type__(property, htmlProperties))
+		return;
+
+	for(const RULE in htmlProperties[property])
+	{
+		if(RULE.charAt(0) == "-") // it is a variable
+			elem.style.setProperty(RULE, htmlProperties[property][RULE]);
+		else
+			elem.style[RULE] = htmlProperties[property][RULE];
+	}
+};
+
 const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 {
 	const ELEM = document.createElement(elementTag);
@@ -110,6 +124,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 					case "dataSets":       __htmljs_set_group_of_attributes__("data", ELEM, PROPERTY, htmlProperties); continue;
 					case "ariaAttributes": __htmljs_set_group_of_attributes__("aria", ELEM, PROPERTY, htmlProperties); continue;
 					case "eventListeners": __htmljs_set_event_listeners__(            ELEM, PROPERTY, htmlProperties); continue;
+					case "cssRules":       __htmljs_set_css_style_rules__(            ELEM, PROPERTY, htmlProperties); continue;
 				}
 
 				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY : htmlProperties[PROPERTY]);
