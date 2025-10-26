@@ -49,54 +49,62 @@ const __htmljs_element_tags__ = [
 	"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
 ];
 
-const __htmljs_check_group_type__ = (property, htmlProperties) =>
+const __htmljs_set_prefixed_property__ = (prefix, elem, field, value) =>
 {
+	elem.setAttribute(prefix + "-" + field, value);
+}
+
+const __htmljs_data_sets__ = (elem, property, value) =>
+{
+	__htmljs_set_prefixed_property__("data", elem, property, value);
+}
+
+const __htmljs_aria_attributes__ = (elem, property, value) =>
+{
+	__htmljs_set_prefixed_property__("aria", elem, property, value);
+}
+
+const __htmljs_event_listeners__ = (elem, event, action) =>
+{
+	if(Array.isArray(action))
+		for(const ACTION of action)
+			elem.addEventListener(event, ACTION);
+	else
+		elem.addEventListener(event, action);
+}
+
+const __htmljs_css_rules__ = (elem, rule, value) =>
+{
+	if(rule.charAt(0) == "-") // it is a variable
+		elem.style.setProperty(rule, value);
+	else
+		elem.style[rule] = value;
+}
+
+const __htmljs_treat_special_properties__ = (elem, property, htmlProperties) =>
+{
+	let behavior;
+
+	switch(property)
+	{
+		case "dataSets":       behavior = __htmljs_data_sets__;       break;
+		case "ariaAttributes": behavior = __htmljs_aria_attributes__; break;
+		case "eventListeners": behavior = __htmljs_event_listeners__; break;
+		case "cssRules":       behavior = __htmljs_css_rules__;       break;
+		default: return false;
+	}
+
 	if(__htmljs_is_not_object__( htmlProperties[property] ))
 	{
 		__htmljs_debug_func__(new TypeError(`Invalid value attributed to \`${property}\`, expecting an object.`));
 		return false;
 	}
 
+	for(const PROPERTY in htmlProperties[property])
+		behavior(elem, PROPERTY, htmlProperties[property][PROPERTY]);
+
 	return true;
 }
-
-const __htmljs_set_group_of_attributes__ = (prefix, elem, property, htmlProperties) =>
-{
-	if(!__htmljs_check_group_type__(property, htmlProperties))
-		return;
-
-	for(const FIELD in htmlProperties[property])
-		elem.setAttribute(prefix + "-" + FIELD, htmlProperties[property][FIELD]);
-};
-
-const __htmljs_set_event_listeners__ = (elem, property, htmlProperties) =>
-{
-	if(!__htmljs_check_group_type__(property, htmlProperties))
-		return;
-
-	for(const EVENT in htmlProperties[property])
-	{
-		if(Array.isArray( htmlProperties[property][EVENT] ))
-			for(const LAMBDA of htmlProperties[property][EVENT])
-				elem.addEventListener(EVENT, LAMBDA);
-		else
-			elem.addEventListener(EVENT, htmlProperties[property][EVENT]);
-	}
-};
-
-const __htmljs_set_css_style_rules__ = (elem, property, htmlProperties) =>
-{
-	if(!__htmljs_check_group_type__(property, htmlProperties))
-		return;
-
-	for(const RULE in htmlProperties[property])
-	{
-		if(RULE.charAt(0) == "-") // it is a variable
-			elem.style.setProperty(RULE, htmlProperties[property][RULE]);
-		else
-			elem.style[RULE] = htmlProperties[property][RULE];
-	}
-};
 
 const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 {
@@ -119,13 +127,8 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 			}
 
 			for(const PROPERTY in htmlProperties){
-				switch(PROPERTY)
-				{
-					case "dataSets":       __htmljs_set_group_of_attributes__("data", ELEM, PROPERTY, htmlProperties); continue;
-					case "ariaAttributes": __htmljs_set_group_of_attributes__("aria", ELEM, PROPERTY, htmlProperties); continue;
-					case "eventListeners": __htmljs_set_event_listeners__(            ELEM, PROPERTY, htmlProperties); continue;
-					case "cssRules":       __htmljs_set_css_style_rules__(            ELEM, PROPERTY, htmlProperties); continue;
-				}
+				if(__htmljs_treat_special_properties__(ELEM, PROPERTY, htmlProperties))
+					continue;
 
 				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY : htmlProperties[PROPERTY]);
 
