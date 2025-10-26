@@ -130,7 +130,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 				if(__htmljs_treat_special_properties__(ELEM, PROPERTY, htmlProperties))
 					continue;
 
-				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY : htmlProperties[PROPERTY]);
+				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY.toLowerCase() : htmlProperties[PROPERTY]);
 
 				if(ELEM[PROPERTY])
 					ELEM[PROPERTY] = VALUE;
