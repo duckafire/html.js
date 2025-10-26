@@ -112,10 +112,12 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 					case "eventListeners": __htmljs_set_event_listeners__(            ELEM, PROPERTY, htmlProperties); continue;
 				}
 
-				ELEM[PROPERTY] =
-					htmlProperties[PROPERTY] == "~"
-						? PROPERTY
-						: htmlProperties[PROPERTY];
+				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY : htmlProperties[PROPERTY]);
+
+				if(ELEM[PROPERTY])
+					ELEM[PROPERTY] = VALUE;
+				else
+					ELEM.setAttribute(PROPERTY, VALUE);
 			}
 		}
 
