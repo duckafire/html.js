@@ -132,7 +132,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 
 				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY.toLowerCase() : htmlProperties[PROPERTY]);
 
-				if(ELEM[PROPERTY])
+				if(ELEM[PROPERTY] !== undefined || PROPERTY == "className")
 					ELEM[PROPERTY] = VALUE;
 				else
 					ELEM.setAttribute(PROPERTY, VALUE);

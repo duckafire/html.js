@@ -91,10 +91,12 @@ below:
 ``` js
 // create a <div> that it contains two
 // "text nodes" and a <br> element
-div( null,
-	"foo foo"
-	br();
-	"bar bar"
+div( {className: "foo"},
+	"Lorem ipsum",
+	br(),
+	span( null,
+		"Lorem ipsum",
+	span),
 	input( {type: "text", value: "foobar", readOnly: "~"}),
 div);
 ```
