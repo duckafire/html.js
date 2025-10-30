@@ -228,3 +228,25 @@ const declare_htmljs = (...args) =>
 
 	return DEST;
 };
+
+const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
+{
+	if(typeof tag != "string")
+		throw new TypeError("Expecting a string, instead a " + (typeof tag));
+
+	const DEST = __htmljs_element_tags__[ (isNoContainer ? "noC" : "c") + "ontainers" ];
+
+	if(force)
+	{
+		for(const TAG of DEST)
+		{
+			if(tag == TAG)
+			{
+				console.warn(new Error(`"${tag}" already was added.`));
+				return;
+			}
+		}
+	}
+
+	DEST.push(tag);
+}
