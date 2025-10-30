@@ -46,7 +46,7 @@ const __htmljs_element_tags__ = {
 		"picture", "pre", "progress", "q", "rp", "rt", "ruby", "samp",
 		"script", "section", "select", "small", "span", "strong", "sub",
 		"summary", "sup", "table", "tbody", "td", "template", "textarea",
-		"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
+		"tfoot", "th", "thead", "time", "title", "tr", "ul", "vari", "video",
 	]
 };
 
@@ -218,6 +218,9 @@ const declare_htmljs = (...args) =>
 		__htmljs_element_tags__[FIELD].forEach((elementTag, id) =>
 		{
 			tag = PREF + elementTag;
+
+			if(elementTag == "vari")
+				elementTag = "var";
 
 			DEST[ (useUpperCase ? tag.toUpperCase() : tag) ] =
 				(FIELD == "noContainers")
