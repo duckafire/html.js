@@ -28,26 +28,27 @@ const __htmljs_is_not_object__ = (thing) =>
 	return typeof thing != "object" || Array.isArray(thing);
 };
 
-const __htmljs_element_tags__ = [
-	// NO-containers
-	"area", "base", "br", "col", "hr", "img", "input", "link",
-	"meta", "source", "track", "wbr",
-	// wbr id == 11, so the first "container" is #12
+const __htmljs_element_tags__ = {
+	noContainers: [
+		"area", "base", "br", "col", "hr", "img", "input", "link",
+		"meta", "source", "track", "wbr",
+	],
 
-	// containers
-	"a", "abbr", "address", "article", "audio", "b", "bdi", "bdo",
-	"blockquote", "body", "button", "canvas", "caption", "cite",
-	"code", "colgroup", "data", "datalist", "dd", "del", "details",
-	"dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption",
-	"figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6",
-	"head", "header", "hgroup", "html", "i", "iframe", "ins", "kbd",
-	"label", "legend", "li", "main", "map", "mark", "meter", "nav",
-	"noscript", "object", "ol", "optgroup", "option", "output", "p",
-	"picture", "pre", "progress", "q", "rp", "rt", "ruby", "samp",
-	"script", "section", "select", "small", "span", "strong", "sub",
-	"summary", "sup", "table", "tbody", "td", "template", "textarea",
-	"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
-];
+	containers: [
+		"a", "abbr", "address", "article", "audio", "b", "bdi", "bdo",
+		"blockquote", "body", "button", "canvas", "caption", "cite",
+		"code", "colgroup", "data", "datalist", "dd", "del", "details",
+		"dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption",
+		"figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6",
+		"head", "header", "hgroup", "html", "i", "iframe", "ins", "kbd",
+		"label", "legend", "li", "main", "map", "mark", "meter", "nav",
+		"noscript", "object", "ol", "optgroup", "option", "output", "p",
+		"picture", "pre", "progress", "q", "rp", "rt", "ruby", "samp",
+		"script", "section", "select", "small", "span", "strong", "sub",
+		"summary", "sup", "table", "tbody", "td", "template", "textarea",
+		"tfoot", "th", "thead", "time", "title", "tr", "ul", "var", "video",
+	]
+};
 
 const __htmljs_set_prefixed_property__ = (prefix, elem, field, value) =>
 {
@@ -212,15 +213,18 @@ const declare_htmljs = (...args) =>
 	const PREF = prefix || "";
 	let tag;
 
-	__htmljs_element_tags__.forEach((elementTag, id) =>
+	for(const FIELD in __htmljs_element_tags__)
 	{
-		tag = PREF + elementTag;
+		__htmljs_element_tags__[FIELD].forEach((elementTag, id) =>
+		{
+			tag = PREF + elementTag;
 
-		DEST[ (useUpperCase ? tag.toUpperCase() : tag) ] =
-			(id < 12) // 12 == first "container"
-				? (properties)              => __htmljs_core__(elementTag, properties)
-				: (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
-	});
+			DEST[ (useUpperCase ? tag.toUpperCase() : tag) ] =
+				(FIELD == "noContainers")
+					? (properties)              => __htmljs_core__(elementTag, properties)
+					: (properties, ...children) => __htmljs_core__(elementTag, properties, ...children);
+		});
+	}
 
 	return DEST;
 };
