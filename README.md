@@ -24,7 +24,11 @@ This is a web component library, thought to be:
 	* [Start library](#start-library)
 	* [Create an element](#create-an-element)
 	* [Closing the element creation](#closing-the-element-creation)
+	* [Adding your self tags](#adding-your-self-tags)
 	* [Special properties](#special-properties)
+	* [Managing default values to properties](#Managing-default-values-to-properties)
+		* [Set default values](#set-default-values)
+		* [Unset default values](#unset-default-values)
 	* [Other stuff](#other-stuff)
 
 ## Installing
@@ -66,6 +70,7 @@ start the library:
 	                  functions.
 	* `useUpperCase`: specifics that the methods names have to be formated by
 	                  upper case characters, instead lower case characteres.
+	* `args`: an object containing the options (these above) wanted.
 
 > [!NOTE]
 > If `createObject != true`, the methods will be declared in `window`, that
@@ -147,6 +152,22 @@ functions below:
 > [!TIP]
 > Run [example.html][example-html] (in your browser) to see how all these work.
 
+### Adding your self tags
+
+It also is possible to add yourself customized tags to the library, to do this it is
+necessary to use this function:
+
+* `void htmljs_add_custom_tag(tag: string, [isNoContainer: boolean = false], [force: boolean = false])`
+	* `tag`: will be saved, by the library, as a valid HTML tag.
+	* `isNoContainer`: specifics if the tag is a *no-container* or not.
+	* `force`: indicates that the addition of the tag must to be forced or not.
+
+> [!NOTE]
+> If `!force` and `tag` already was saved an error will occur.
+
+It save the tag name in a library list, that it is used during the tag validations,
+what it avoid that the using of the customized tag throw an error.
+
 ### Special properties
 
 In addition of the *common element properties*, the `htmlProperties` support the
@@ -191,6 +212,49 @@ SPAN({ cssRules: { "--variable": value } });
 > * [aria-][aria-property]
 > * [Event Listeners][event-listeners]
 > * [The `style` property][style-property]
+
+### Setting default values to properties
+
+It is possible (un)set default values to elements properties. They are based in tags,
+so if you define a default value (e.g.) to `href`, from `<a>`, all tags (`<a>`)
+create after this will receive this default value automatically. But if during the
+call of the *Creator Function* (of `<a>`) the `href` is defined, the default value
+will be overrided.
+
+#### Set default values
+
+* `void htmljs_set_default_properties_values(tag: string[, validateTag: boolean = false], htmlProperties: object)`
+* `void htmljs_set_default_properties_values( [validateTag: boolean = false ,] args: array )`
+	* `tag`: element whose properties will receive a, or more, default value(s).
+	* `validateTag`: specifics if `tag` have to be validated (check if it exists or not).
+	* `htmlProperties`: all tags, and their default values, that will receive a default
+	                    value.
+	* `args`: an object containing a list of tags, with their HTML properties.
+
+> [!NOTE]
+> These values are global, they affects all the *Creator Functions* call that occur
+> after that it is called. *Special Properties* are included too, but their
+> *subproperties* cannot receive a default value individually.
+
+> [!TIP]
+> This is a example of value to `args`: `{a: {href: "#"}, div: {className: "div"}}`.
+
+#### Unset default values
+
+* `void htmljs_unset_default_properties_values(tag: string[, validateTag: boolean = false], htmlProperties: array)`
+* `void htmljs_unset_default_properties_values( [validateTag: boolean = false ,] args: array )`
+	* `tag`: element whose properties will lose a, or more, default value(s).
+	* `validateTag`: specifics if `tag` have to be validated (check if it exists or not).
+	* `htmlProperties`: a list of properties that will lose their default values.
+	* `args`: an object containing a list of tags, with their HTML properties.
+
+> [!NOTE]
+> These values are global, they affects all the *Creator Functions* call that occur
+> after that it is called. *Special Properties* are included too, but their
+> *subproperties* cannot receive a default value individually.
+
+> [!TIP]
+> This is a example of value to `args`: `{a: ["href"], div: ["className"]}`.
 
 ### Other stuff
 
