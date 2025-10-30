@@ -154,8 +154,9 @@ functions below:
 It also is possible to add yourself customized tags to the library, to do this it is
 necessary to use this function:
 
-* `void htmljs_add_custom_tag(tag: string, [isNoContainer: boolean = false], [force: boolean = false])`
-	* `tag`: will be saved, by the library, as a valid HTML tag.
+* `void htmljs_add_custom_tag(tag: string | array, [isNoContainer: boolean = false], [force: boolean = false])`
+	* `tag`: tag, or list of tags, that will be saved, by the library, as a valid HTML
+	         tag.
 	* `isNoContainer`: specifics if the tag is a *no-container* or not.
 	* `force`: indicates that the addition of the tag must to be forced or not.
 

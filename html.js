@@ -267,16 +267,17 @@ const declare_htmljs = (...args) =>
 	return DEST;
 };
 
-const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
+const __htmljs_save_custom_tag__ = (dest, tag, force) =>
 {
 	if(typeof tag != "string")
-		throw new TypeError(`Expecting a string, instead a "${typeof tag}".`);
-
-	const DEST = __htmljs_element_tags__[ (isNoContainer ? "noC" : "c") + "ontainers" ];
+	{
+		__htmljs_debug_func__(new TypeError(`Expecting a string, instead a "${typeof tag}".`));
+		return;
+	}
 
 	if(force)
 	{
-		for(const TAG of DEST)
+		for(const TAG of dest)
 		{
 			if(tag == TAG)
 			{
@@ -286,7 +287,21 @@ const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
 		}
 	}
 
-	DEST.push(tag);
+	dest.push(tag);
+}
+
+const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
+{
+	const DEST = __htmljs_element_tags__[ (isNoContainer ? "noC" : "c") + "ontainers" ];
+
+	if(!Array.isArray(tag))
+	{
+		__htmljs_save_custom_tag__(DEST, tag, force);
+		return;
+	}
+
+	for(const TAG of tag)
+		__htmljs_save_custom_tag__(DEST, TAG, force);
 }
 
 const __htmljs_validate_tags__ = (tag) =>
