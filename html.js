@@ -23,9 +23,21 @@
 let __htmljs_ignore_last__ = 1;
 let __htmljs_debug_func__  = console.warn;
 
+const __htmljs_default_properties_values__ = {};
+
 const __htmljs_is_not_object__ = (thing) =>
 {
 	return typeof thing != "object" || Array.isArray(thing);
+};
+
+const __htmljs_is_object__ = (thing) =>
+{
+	return thing !== null && typeof thing == "object" && !Array.isArray(thing);
+};
+
+const __htmljs_is_empty_object__ = (object) =>
+{
+	return Object.keys(object).length === 0;
 };
 
 const __htmljs_element_tags__ = {
@@ -107,9 +119,42 @@ const __htmljs_treat_special_properties__ = (elem, property, htmlProperties) =>
 	return true;
 }
 
+const __htmljs_set_element_properties__ = (elem, htmlProperties) =>
+{
+	for(const PROPERTY in htmlProperties)
+	{
+		if(__htmljs_treat_special_properties__(elem, PROPERTY, htmlProperties))
+			continue;
+
+		const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY.toLowerCase() : htmlProperties[PROPERTY]);
+
+		if(elem[PROPERTY] !== undefined || PROPERTY == "className")
+			elem[PROPERTY] = VALUE;
+		else
+			elem.setAttribute(PROPERTY, VALUE);
+	}
+
+}
+
 const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 {
 	const ELEM = document.createElement(elementTag);
+
+	if(__htmljs_default_properties_values__[elementTag] != undefined)
+	{
+		let ref = __htmljs_default_properties_values__[elementTag];
+
+		if(__htmljs_is_not_object__(ref))
+		{
+			__htmljs_debug_func__(new TypeError(`Excepting object to \`htmlProperties\`, instead "${typeof htmlProperties}".`));
+
+			// this allows to jump the for-loop below,
+			// if the Debug Mode is != 2
+			ref = {};
+		}
+
+		__htmljs_set_element_properties__(ELEM, ref);
+	}
 
 	if(htmlProperties !== undefined)
 	{
@@ -120,24 +165,14 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 		{
 			if(__htmljs_is_not_object__( htmlProperties ))
 			{
-				__htmljs_debug_func__(new TypeError(`Excepting Object to \`htmlProperties\`, instead "${typeof htmlProperties}".`));
-				
+				__htmljs_debug_func__(new TypeError(`Excepting object to \`htmlProperties\`, instead "${typeof htmlProperties}".`));
+
 				// this allows to jump the for-loop below,
 				// if the Debug Mode is != 2
 				htmlProperties = {};
 			}
 
-			for(const PROPERTY in htmlProperties){
-				if(__htmljs_treat_special_properties__(ELEM, PROPERTY, htmlProperties))
-					continue;
-
-				const VALUE = (htmlProperties[PROPERTY] == "~" ? PROPERTY.toLowerCase() : htmlProperties[PROPERTY]);
-
-				if(ELEM[PROPERTY] !== undefined || PROPERTY == "className")
-					ELEM[PROPERTY] = VALUE;
-				else
-					ELEM.setAttribute(PROPERTY, VALUE);
-			}
+			__htmljs_set_element_properties__(ELEM, htmlProperties);
 		}
 
 		for(let i = 0; i < ARGS_MAX; i++)
@@ -150,7 +185,7 @@ const __htmljs_core__ = (elementTag, htmlProperties, ...children) =>
 
 			if(!(children[i] instanceof HTMLElement))
 			{
-				__htmljs_debug_func__(new TypeError(`Excepting Object or String to \`children[${i}]\`, instead "${typeof children[i]}".`));
+				__htmljs_debug_func__(new TypeError(`Excepting object or String to \`children[${i}]\`, instead "${typeof children[i]}".`));
 				continue;
 			}
 
@@ -235,7 +270,7 @@ const declare_htmljs = (...args) =>
 const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
 {
 	if(typeof tag != "string")
-		throw new TypeError("Expecting a string, instead a " + (typeof tag));
+		throw new TypeError(`Expecting a string, instead a "${typeof tag}".`);
 
 	const DEST = __htmljs_element_tags__[ (isNoContainer ? "noC" : "c") + "ontainers" ];
 
@@ -252,4 +287,112 @@ const htmljs_add_custom_tag = (tag, isNoContainer, force) =>
 	}
 
 	DEST.push(tag);
+}
+
+const __htmljs_validate_tags__ = (tag) =>
+{
+	for(const ELEMENT_TYPE in __htmljs_element_tags__)
+		for(const TAG of __htmljs_element_tags__[ ELEMENT_TYPE ])
+			if(tag == TAG)
+				return true;
+
+	__htmljs_debug_func__(new TypeError(`Invalid HTML tag: "${tag}".`));
+	return false;
+}
+
+const __htmljs_manager_default_properties_values__ = (userFunc, ...args) =>
+{
+	let validateTags, tagsList;
+
+	if(__htmljs_is_object__(args[0]))
+	{
+		validateTags = false;
+		tagsList     = args[0];
+	}
+	else if(typeof args[0] == "boolean" && __htmljs_is_object__(args[1]))
+	{
+		validateTags = args[0];
+		tagsList     = args[1];
+	}
+	else
+	{
+		validateTags = (typeof args[1] == "boolean" && args[1]);
+		tagsList     = null;
+	}
+
+	if(tagsList !== null)
+	{
+		for(const TAG in tagsList)
+			userFunc(TAG, validateTags, tagsList[ TAG ]);
+
+		return null;
+	}
+
+	const ARG_TAG = args[0].toLowerCase();
+
+	// TAG == args[0]
+	if(typeof ARG_TAG != "string")
+		throw new TypeError(`Expecting a string, instead a "${typeof args[0]}".`);
+
+	if(validateTags)
+	{
+		if(__htmljs_validate_tags__(ARG_TAG))
+			return ARG_TAG;
+
+		return null;
+	}
+
+	return ARG_TAG;
+}
+
+const htmljs_set_default_properties_values = (...args) =>
+{
+	const TAG = __htmljs_manager_default_properties_values__(htmljs_set_default_properties_values, ...args);
+
+	if(TAG === null)
+		return;
+
+	const VALIDATE_TAGS   = args[1];
+	const HTML_PROPERTIES = args[2];
+
+	if(!__htmljs_is_object__(HTML_PROPERTIES))
+		throw new TypeError("Invalid type to `htmlProperties`. Expecting an object.");
+
+	if(VALIDATE_TAGS)
+		__htmljs_validate_tags__(TAG);
+
+	if(__htmljs_default_properties_values__[TAG] === undefined)
+		__htmljs_default_properties_values__[TAG] = {};
+
+	for(const PROPERTY in HTML_PROPERTIES)
+		__htmljs_default_properties_values__[TAG][PROPERTY] = HTML_PROPERTIES[ PROPERTY ];
+
+	if(__htmljs_is_empty_object__(__htmljs_default_properties_values__[TAG]))
+		delete __htmljs_default_properties_values__[TAG];
+};
+
+const htmljs_unset_default_properties_values = (...args) =>
+{
+	const TAG = __htmljs_manager_default_properties_values__(htmljs_unset_default_properties_values, ...args);
+
+	if(TAG === null)
+		return;
+
+	const VALIDATE_TAGS   = args[1];
+	const HTML_PROPERTIES = args[2];
+
+	if(!Array.isArray(HTML_PROPERTIES))
+		throw new TypeError("Invalid type to `htmlProperties`. Expecting an object.");
+
+	if(VALIDATE_TAGS)
+		__htmljs_validate_tags__(TAG);
+
+	if(__htmljs_default_properties_values__[TAG] === undefined)
+		return;
+
+	for(const PROPERTY of HTML_PROPERTIES)
+		delete __htmljs_default_properties_values__[TAG][PROPERTY];
+
+	if(__htmljs_is_empty_object__(__htmljs_default_properties_values__[TAG]))
+		delete __htmljs_default_properties_values__[TAG];
 }
