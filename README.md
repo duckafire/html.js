@@ -232,7 +232,7 @@ will be overrided.
 #### Set default values
 
 * `void htmljs_set_default_properties_values(tag: string[, validateTag: boolean = false], htmlProperties: object)`
-* `void htmljs_set_default_properties_values( [validateTag: boolean = false ,] args: array )`
+* `void htmljs_set_default_properties_values( [validateTag: boolean = false ,] args: object )`
 	* `tag`: element whose properties will receive a, or more, default value(s).
 	* `validateTag`: specifics if `tag` have to be validated (check if it exists or not).
 	* `htmlProperties`: all tags, and their default values, that will receive a default
@@ -250,11 +250,16 @@ will be overrided.
 #### Unset default values
 
 * `void htmljs_unset_default_properties_values(tag: string[, validateTag: boolean = false], htmlProperties: array)`
-* `void htmljs_unset_default_properties_values( [validateTag: boolean = false ,] args: array )`
+* `void htmljs_unset_default_properties_values( [validateTag: boolean = false ,] args: object )`
 	* `tag`: element whose properties will lose a, or more, default value(s).
 	* `validateTag`: specifics if `tag` have to be validated (check if it exists or not).
 	* `htmlProperties`: a list of properties that will lose their default values.
 	* `args`: an object containing a list of tags, with their HTML properties.
+
+> [!IMPORTANT]
+> The properties names used in this function must be equal the named used in
+> `htmljs_set_default_properties_values`. Therefore, if `fontSize` was set this
+> function only will recognize it - so `"font-size"` will not work.
 
 > [!NOTE] \
 > These values are global, they affects all the *Creation Functions* call that occur

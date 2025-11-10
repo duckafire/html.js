@@ -19,6 +19,16 @@
 	<script>
 		declare_htmljs();
 
+		htmljs_set_default_properties_values({
+			a: {rel: "noopener noreferrer"},
+			i: {display: "block", fontSize: "2rem"}
+		});
+
+		htmljs_unset_default_properties_values({
+			a: ["rel"],
+			i: ["display", "fontSize"],
+		});
+
 		document.getElementById("dest0").appendChild(
 			div( null,
 				h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
