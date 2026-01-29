@@ -1,0 +1,12 @@
+{
+  "compileOptions": {
+    "target": "ES2016",
+    "module": "none",
+    "rootDir": ".",
+    "outDir": ".",
+    "strictNullChecks": false,
+    "strict": true,
+    "declaration": true
+  },
+  "files": ["index.ts"]
+}

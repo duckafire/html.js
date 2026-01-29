@@ -3,23 +3,38 @@
   "author": "duckafire",
   "version": "0.3.0-2",
   "license": "Zlib",
+  "main": "index.min.js",
   "description": "Just a very simple components library.",
-  "keywords": ["front-end", "client", "html", "dom", "light", "components", "web", "simple", "minimalist", "easy"],
+  "keywords": [
+    "front-end",
+    "client",
+    "html",
+    "dom",
+    "light",
+    "components",
+    "web",
+    "simple",
+    "minimalist",
+    "easy"
+  ],
   "devDependencies": {
-    "terser": "^5.43.1"
+    "terser": "^5.43.1",
+    "typescript": "^4.9.5"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/duckafire/html.js.git"
   },
   "scripts": {
-    "compress": "npx terser html.js -o html.min.js --compress --mangle"
+    "compile": "npx tsc",
+    "compress": "npx terser index.js -o index.min.js --compress --mangle",
+    "build": "npm run compile && npm run compress"
   },
   "files": [
     "LICENSE",
     "README.md",
-    "html.js",
-    "html.min.js"
+    "index.d.ts",
+    "index.min.js"
   ],
   "custom-fields": {
     "cloud-repostories": [

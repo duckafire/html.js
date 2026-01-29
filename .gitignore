@@ -1,3 +1,6 @@
 node_modules/
 package-lock.json
+
+index.js
 index.min.js
+index.d.ts
