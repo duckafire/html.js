@@ -1,6 +1,12 @@
 node_modules/
 package-lock.json
+*.lock
 
 index.js
 index.min.js
 index.d.ts
+
+TODO
+todo
+foo
+foo.*
