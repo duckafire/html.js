@@ -56,6 +56,11 @@ const __hj_formatPropertyName__ = (name: string, prefix: string = null): string 
 	if(name.charAt(0) === "-")
 		return name;
 
+	// If prefix is null, the property
+	// is a "default property" (from
+	// element standard).
+	const WORD_SEPARATOR = (prefix !== null ? "-" : "");
+
 	let result: string = name.charAt(0);
 	let char: string;
 
@@ -64,7 +69,7 @@ const __hj_formatPropertyName__ = (name: string, prefix: string = null): string 
 		char = name.charAt(i);
 
 		if(char === char.toUpperCase())
-			result += "-" + char.toLowerCase();
+			result += WORD_SEPARATOR + char.toLowerCase();
 		else
 			result += char;
 	}
