@@ -3,159 +3,47 @@
 <html>
 <head>
 	<title>html.js example</title>
-	<style>body{background-color:#292929;color:#bfbfbf;}input{min-width: 6em;width: 50%;background-color:#3a3a3a;color:inherit;border:1px solid #1f1f1f;border-radius:0.25em;font-size:1em;outline:none;}.hello-world{margin:0;font-size:10em;}#dest0{background-color:#803;}#dest1{background-color:#083;}#dest2{background-color:#038;}#dest3{background-color:#617;}#dest4{background-color:#167;}#dest5{background-color:#671;}.dest{height:min-content;margin:1em;padding:1em;}</style>
-	<script src="./html.js"></script>
+	<style>body{background-color:#292929;color:#bfbfbf;}input{min-width: 6em;width: 50%;background-color:#3a3a3a;color:inherit;border:1px solid #1f1f1f;border-radius:0.25em;font-size:1em;outline:none;}.hello-world{margin:0;font-size:10em;}.dest{background-color:#714;height:min-content;margin:1em;padding:1em;}</style>
+	<script src="./index.js"></script>
 </head>
 <body>
-	<div id="dest0" class="dest"></div>
-	<div id="dest1" class="dest"></div>
-	<div id="dest2" class="dest"></div>
-	<div id="dest3" class="dest"></div>
-	<div id="dest4" class="dest"></div>
-	<div id="dest5" class="dest"></div>
-
-	<!-- =========================================================================== -->
+	<div id="dest" class="dest"></div>
 
 	<script>
-		declare_htmljs();
-
-		htmljs_set_default_properties_values({
+		HJDefaultProperties.set({
 			a: {rel: "noopener noreferrer"},
-			i: {display: "block", fontSize: "2rem"}
+			i: {display: "block", fontSize: "2rem"},
 		});
 
-		htmljs_unset_default_properties_values({
-			a: ["rel"],
-			i: ["display", "fontSize"],
+		HJDefaultProperties.unset({
+			i: ["fontSize"],
 		});
 
-		document.getElementById("dest0").appendChild(
-			div( null,
-				h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
-					"Hello world!",
-				h1),
-				input( {value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
-					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
-					br(), // it breaks the line
-					br(), // it "gives" an empty line
-					"Potenti ultricies inceptos, quam facilisis aliquam vehicula",
-				p),
-			div)
-		);
-	</script>
+		const inputEvents = {
+			click: () => console.log("CLICKED!"),
+			mouseover: [
+				() => console.log("MOUSE OVER!"),
+				() => console.log("mouse over AGAIN!!"),
+			],
+		};
 
-	<!-- =========================================================================== -->
-
-	<script>
-		declare_htmljs("ELEM");
-
-		document.getElementById("dest1").appendChild(
-			ELEMdiv( null,
-				ELEMh1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
-					"Hello world!",
-				ELEMh1),
-				ELEMinput({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				ELEMp( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
-					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
-					ELEMbr(),
-					ELEMbr(),
-					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
-				ELEMp),
-			ELEMdiv)
-		);
-	</script>
-
-	<!-- =========================================================================== -->
-
-	<script>
-		const FOO = declare_htmljs(null, true);
-
-		document.getElementById("dest2").appendChild(
-			FOO.div( null,
-				FOO.h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
-					"Hello world!",
-				FOO.h1),
-				FOO.input({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO.p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
-					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
-					FOO.br(),
-					FOO.br(),
-					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
-				FOO.p),
-			FOO.div)
-		);
-	</script>
-
-	<!-- =========================================================================== -->
-
-	<script>
-		// `FOO1` points to `window` because `createObject !== true`
-		const FOO1 = declare_htmljs({prefix: "bar_"});
-		htmljs_set_ignore_last(false);
-
-		document.getElementById("dest3").appendChild(
-			FOO1.bar_div( null,
-				FOO1.bar_h1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
-					"Hello world!",
-				),
-				FOO1.bar_input({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO1.bar_p( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
-					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
-					FOO1.bar_br(),
-					FOO1.bar_br(),
-					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
-				),
-			),
-		);
-	</script>
-
-	<!-- =========================================================================== -->
-
-	<script>
-		// it is possible, but I do not recommend;
-		// `FOO2` points to `window` because `createObject !== true`
-		const FOO2 = declare_htmljs("000");
-		htmljs_set_ignore_last(true);
-
-		document.getElementById("dest4").appendChild(
-			FOO2["000div"]( null,
-				FOO2["000h1"]( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
-					"Hello world!",
-				FOO2["000h1"]),
-				FOO2["000input"]({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				FOO2["000p"]( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
-					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
-					FOO2["000br"](),
-					FOO2["000br"](),
-					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
-				FOO2["000p"]),
-			FOO2["000div"])
-		);
-	</script>
-
-	<!-- =========================================================================== -->
-
-	<script>
-		declare_htmljs({useUpperCase: true});
-
-		document.getElementById("dest5").appendChild(
+		document.getElementById("dest").appendChild(
 			DIV( null,
-				H1( {className: "hello-world", dataSets: {foo: "bar"}, cssRules: {"--foo-color": "#123456"}},
+				H1( {className: "hello-world", _data: {foo: "bar"}, _var: {fooColor: "#123456"}},
 					"Hello world!",
 				H1),
-				INPUT({value: "Lorem ipsum", type: "text", readOnly: "~", eventListeners: {"click": [()=>console.info("CLICK 0"),()=>console.info("click 1")], "mouseover": ()=>console.warn("MOUSE OVER")}}),
-				P( {ariaAttributes: {hidden: "false"}, cssRules: {fontSize: "1.25rem", "padding-right": "20%"}},
+				INPUT( {value: "Lorem ipsum", type: "text", readOnly: "readonly", _event: inputEvents} ),
+				P( {translate: "no", _style: {fontSize: "1.25rem", paddingRight: "20%"}, _aria: {label: "Foo ARIA label."}},
 					"Lorem ipsum odor amet, consectetuer adipiscing elit.",
 					BR(),
 					BR(),
-					"habitasse sed eleifend massa hendrerit accumsan. Venenatis",
+					SPAN( {_style: {fontWeight: "bold", cursor: "pointer"}},
+						"Potenti ultricies inceptos, ",
+					SPAN),
+					"quam facilisis aliquam vehicula",
 				P),
-			DIV)
+			DIV),
 		);
 	</script>
-
-	<!-- =========================================================================== -->
-
 </body>
 </html>
