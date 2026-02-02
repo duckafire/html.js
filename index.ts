@@ -35,6 +35,13 @@ type TSpecDict = Record<string, string> | Record<keyof ElementEventMap, EventLis
 // }
 type TAttrDict = Record<string, string | TSpecDict>;
 
+// { div: {{
+//   title: "lorem",
+//   _style: { display: "inline-block" }
+//   _event: { click: ()=>0 }
+// }} }
+type TElemAttr = Record<string, TAttrDict>;
+
 const enum SpecialProperties
 {
 	ARIA  = "_aria",
@@ -70,20 +77,21 @@ const __hj_formatPropertyName__ = (name: string, prefix: string = null): string 
 
 class HJDefaultProperties
 {
-	private static __list__: Record<string, TAttrDict> = {};
+	private static __list__: TElemAttr = {};
 
-	static set(tagName: string, properties: TAttrDict): void
+	static set(list: TElemAttr): void | never
 	{
-		if(properties === null || typeof properties !== "object")
+		if(list === null || typeof list !== "object")
 			throw new TypeError("Expecting: OBJECT.");
 
-		tagName = tagName.toUpperCase();
+		for(const TAG_NAME in list)
+		{
+			if(this.__list__[TAG_NAME] === undefined)
+				this.__list__[TAG_NAME] = {};
 
-		if(this.__list__[tagName] === undefined)
-			this.__list__[tagName] = {};
-
-		for(const PROP in properties)
-			this.__list__[tagName][ __hj_formatPropertyName__( PROP ) ] = properties[PROP];
+			for(const PROP in list[ TAG_NAME ])
+				this.__list__[TAG_NAME][ __hj_formatPropertyName__( PROP ) ] = list[ TAG_NAME ][ PROP ];
+		}
 	}
 
 	static get(tagName: string): TAttrDict
@@ -91,14 +99,14 @@ class HJDefaultProperties
 		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {};
 	}
 
-	static unset(tagName: string, properties: string[] = null): void
+	static unset(list: Record<string, string[]>): void | never
 	{
-		if(properties === null)
-			delete HJDefaultProperties.__list__[tagName];
+		if(list === null || typeof list !== "object")
+			throw new TypeError("Expecting: OBJECT.");
 
-		else
-			for(const PROP of properties)
-				delete HJDefaultProperties.__list__[tagName][ __hj_formatPropertyName__(PROP) ];
+		for(const TAG_NAME in list)
+			for(const PROP of list[ TAG_NAME ])
+				delete HJDefaultProperties.__list__[TAG_NAME][ __hj_formatPropertyName__(PROP) ];
 	}
 }
 
