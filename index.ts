@@ -60,7 +60,7 @@ class HJDefaultProperties
 {
 	private static __list__: Record<string, TDict> = {}
 
-	static set(tagName: string, properties: TDict)
+	static set(tagName: string, properties: TDict): void
 	{
 		if(properties === null || typeof properties !== "object")
 			throw new TypeError("Expecting: OBJECT.");
@@ -74,6 +74,16 @@ class HJDefaultProperties
 	static get(tagName: string): TDict
 	{
 		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {} as TDict;
+	}
+
+	static unset(tagName: string, properties: string[] = null): void
+	{
+		if(properties === null)
+			delete HJDefaultProperties.__list__[tagName];
+
+		else
+			for(const PROP of properties)
+				delete HJDefaultProperties.__list__[tagName][ __hj_formatPropertyName__(PROP) ];
 	}
 }
 
