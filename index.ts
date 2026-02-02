@@ -59,7 +59,8 @@ const __hj_formatAttributeName__ = (name: string, prefix: string = null): string
 	// If prefix is null, the attribute
 	// is a "default attribute" (from
 	// element standard).
-	const WORD_SEPARATOR = (prefix !== null ? "-" : "");
+	if(prefix === null)
+		return name.toLowerCase();
 
 	let result: string = name.charAt(0);
 	let char: string;
@@ -69,7 +70,7 @@ const __hj_formatAttributeName__ = (name: string, prefix: string = null): string
 		char = name.charAt(i);
 
 		if(char === char.toUpperCase())
-			result += WORD_SEPARATOR + char.toLowerCase();
+			result += "-" + char.toLowerCase();
 		else
 			result += char;
 	}
