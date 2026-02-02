@@ -20,8 +20,20 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+// P( null, <...CHILDREN>, <TAG-CLOSER>)
 type TChildren = [] | Element[] | [...Array<Element>, Function];
-type TDict     = Record<string, unknown>;
+
+// { display: "inline-block" }
+// { click: ()=>0 }
+// { click: [ ()=>1, ()=>2 ] }
+type TSpecDict = Record<string, string> | Record<keyof ElementEventMap, EventListener | EventListener[]>;
+
+// {
+//   title: "lorem",
+//   _style: { display: "inline-block" }
+//   _event: { click: ()=>0 }
+// }
+type TAttrDict = Record<string, string | TSpecDict>;
 
 const enum SpecialProperties
 {
@@ -58,9 +70,9 @@ const __hj_formatPropertyName__ = (name: string, prefix: string = null): string 
 
 class HJDefaultProperties
 {
-	private static __list__: Record<string, TDict> = {}
+	private static __list__: Record<string, TAttrDict> = {};
 
-	static set(tagName: string, properties: TDict): void
+	static set(tagName: string, properties: TAttrDict): void
 	{
 		if(properties === null || typeof properties !== "object")
 			throw new TypeError("Expecting: OBJECT.");
@@ -71,9 +83,9 @@ class HJDefaultProperties
 			this.__list__[tagName][ __hj_formatPropertyName__( PROP ) ] = properties[PROP];
 	}
 
-	static get(tagName: string): TDict
+	static get(tagName: string): TAttrDict
 	{
-		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {} as TDict;
+		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {};
 	}
 
 	static unset(tagName: string, properties: string[] = null): void
@@ -90,7 +102,7 @@ class HJDefaultProperties
 abstract class __HJ_PropertiesManager__
 {
 	// Return true if it is defined.
-	private __setSpecialProperties__(elem: Element, propName: string, properties: TDict): boolean | never
+	private __setSpecialProperties__(elem: Element, propName: string, properties: TSpecDict): boolean | never
 	{
 		// ALL special properties start with "_".
 		if(propName.charAt(0) !== "_")
@@ -105,29 +117,18 @@ abstract class __HJ_PropertiesManager__
 				prefix = propName.slice(1) + "-"; // removes "_".
 
 				for(const NAME in properties)
-					elem.setAttribute(__hj_formatPropertyName__( NAME, prefix ), properties[ NAME ] as string);
+					elem.setAttribute(__hj_formatPropertyName__( NAME, prefix ), properties[ NAME ]);
 
 				break;
 
 			case SpecialProperties.EVENT:
-				// Event-key : behavior | behavior[]
 				for(const PAIR in properties)
 				{
 					if(!Array.isArray(PAIR[1]))
-					{
-						elem.addEventListener((PAIR[0] as keyof ElementEventMap), (PAIR[1] as unknown as EventListenerOrEventListenerObject));
-						continue;
-					}
-
-					for(const BEHAVIOR of PAIR[1])
-						elem.addEventListener((PAIR[0] as keyof ElementEventMap), (BEHAVIOR as unknown as EventListenerOrEventListenerObject));
-					// NOTE: I do not why, but TSC thinks
-					// PAIR[1]/BEHAVIOR is a `string`, but,
-					// based in TDict, it is a `unknown`;
-					// because of this, I use `as unknown as`
-					// (assertion to
-					// EventListenerOrEventListenerObject was
-					// working).
+						elem.addEventListener(PAIR[0] as keyof ElementEventMap, PAIR[1] as unknown as EventListener);
+					else
+						for(const BEHAVIOR of PAIR[1])
+							elem.addEventListener(PAIR[0], BEHAVIOR);
 				}
 
 				break;
@@ -150,16 +151,16 @@ abstract class __HJ_PropertiesManager__
 		return true;
 	}
 
-	protected __setProperties(elem: Element, properties: TDict): void | never
+	protected __setProperties(elem: Element, properties: TAttrDict): void | never
 	{
-		const DEFAULT_PROPERTIES: TDict = HJDefaultProperties.get(elem.tagName);
+		const DEFAULT_PROPERTIES: TAttrDict = HJDefaultProperties.get(elem.tagName);
 
 		for(const NAME in DEFAULT_PROPERTIES)
-			elem.setAttribute( NAME, DEFAULT_PROPERTIES[ NAME ] as string );
+			elem.setAttribute( NAME, DEFAULT_PROPERTIES[ NAME ] as string);
 
 		for(const NAME in properties)
-			if(!this.__setSpecialProperties__(elem, NAME, properties[NAME] as TDict))
-				elem.setAttribute( __hj_formatPropertyName__( NAME ), properties[NAME] as string );
+			if(!this.__setSpecialProperties__(elem, NAME, properties[NAME] as TSpecDict))
+				elem.setAttribute( __hj_formatPropertyName__( NAME ), properties[NAME] as string);
 	}
 }
 
@@ -170,7 +171,7 @@ class __HJ_InlineElement__ extends __HJ_PropertiesManager__
 		super();
 	}
 
-	createElement(tagName: string, properties: TDict = {}): Element | never
+	createElement(tagName: string, properties: TAttrDict = {}): Element | never
 	{
 		const ELEM = document.createElement(tagName);
 		
@@ -218,7 +219,7 @@ class __HJ_BlockElement__ extends __HJ_PropertiesManager__
 			elem.appendChild( document.createTextNode( textNode ) );
 	}
 
-	createElement(tagName: string, properties: TDict = {}, ...children: TChildren): Element | never
+	createElement(tagName: string, properties: TAttrDict = {}, ...children: TChildren): Element | never
 	{
 		const ELEM = document.createElement(tagName);
 		
@@ -230,8 +231,8 @@ class __HJ_BlockElement__ extends __HJ_PropertiesManager__
 }
 
 for(const TAG of ["AREA", "BASE", "BR", "COL", "HR", "IMG", "INPUT", "LINK", "META", "SOURCE", "TRACK", "WBR"])
-	window[TAG] = (properties?: TDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, properties);
+	window[TAG] = (properties?: TAttrDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, properties);
 
 for(const TAG of ["A", "ABBR", "ADDRESS", "ARTICLE", "AUDIO", "B", "BDI", "BDO", "BLOCKQUOTE", "BODY", "BUTTON", "CANVAS", "CAPTION", "CITE", "CODE", "COLGROUP", "DATA", "DATALIST", "DD", "DEL", "DETAILS", "DFN", "DIALOG", "DIV", "DL", "DT", "EM", "FIELDSET", "FIGCAPTION", "FIGURE", "FOOTER", "FORM", "H1", "H2", "H3", "H4", "H5", "H6", "HEAD", "HEADER", "HGROUP", "HTML", "I", "IFRAME", "INS", "KBD", "LABEL", "LEGEND", "LI", "MAIN", "MAP", "MARK", "METER", "NAV", "NOSCRIPT", "OBJECT", "OL", "OPTGROUP", "OPTION", "OUTPUT", "P", "PICTURE", "PRE", "PROGRESS", "Q", "RP", "RT", "RUBY", "SAMP", "SCRIPT", "SECTION", "SELECT", "SMALL", "SPAN", "STRONG", "SUB", "SUMMARY", "SUP", "TABLE", "TBODY", "TD", "TEMPLATE", "TEXTAREA", "TFOOT", "TH", "THEAD", "TIME", "TITLE", "TR", "UL", "VARI", "VIDEO"])
-	window[TAG] = (properties?: TDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, properties, ...children);
+	window[TAG] = (properties?: TAttrDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, properties, ...children);
 
