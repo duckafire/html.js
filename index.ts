@@ -148,7 +148,7 @@ abstract class __HJ_PropertiesManager__
 			elem.setAttribute( NAME, DEFAULT_PROPERTIES[ NAME ] as string );
 
 		for(const NAME in properties)
-			if(!this.__setSpecialProperties__(elem, NAME, properties))
+			if(!this.__setSpecialProperties__(elem, NAME, properties[NAME] as TDict))
 				elem.setAttribute( __hj_formatPropertyName__( NAME ), properties[NAME] as string );
 	}
 }
