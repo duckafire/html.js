@@ -32,34 +32,53 @@ const enum SpecialProperties
 	VAR   = "_var",
 }
 
-abstract class __HJ_PropertiesManager__
+const __hj_formatPropertyName__ = (name: string, prefix: string = null): string =>
 {
-	private __defaultProperties__: TDict = {};
+	if(name.charAt(0) === "-")
+		return name;
 
-	private __formatName__(name: string, prefix: string = null): string
+	let result: string = name.charAt(0);
+	let char: string;
+
+	for(let i = 1; i < name.length; i++)
 	{
-		if(name.charAt(0) === "-")
-			return name;
+		char = name.charAt(i);
 
-		let result: string = name.charAt(0);
-		let char: string;
-
-		for(let i = 1; i < name.length; i++)
-		{
-			char = name.charAt(i);
-
-			if(char === char.toUpperCase())
-				result += "-" + char.toLowerCase();
-			else
-				result += char;
-		}
-
-		if(prefix !== null)
-			return prefix + result;
-
-		return result;
+		if(char === char.toUpperCase())
+			result += "-" + char.toLowerCase();
+		else
+			result += char;
 	}
 
+	if(prefix !== null)
+		return prefix + result;
+
+	return result;
+};
+
+class HJDefaultProperties
+{
+	private static __list__: Record<string, TDict> = {}
+
+	static set(tagName: string, properties: TDict)
+	{
+		if(properties === null || typeof properties !== "object")
+			throw new TypeError("Expecting: OBJECT.");
+
+		tagName = tagName.toUpperCase();
+
+		for(const PROP in properties)
+			this.__list__[tagName][ __hj_formatPropertyName__( PROP ) ] = properties[PROP];
+	}
+
+	static get(tagName: string): TDict
+	{
+		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {} as TDict;
+	}
+}
+
+abstract class __HJ_PropertiesManager__
+{
 	// Return true if it is defined.
 	private __setSpecialProperties__(elem: Element, propName: string, properties: TDict): boolean | never
 	{
@@ -76,7 +95,7 @@ abstract class __HJ_PropertiesManager__
 				prefix = propName.slice(1) + "-"; // removes "_".
 
 				for(const NAME in properties)
-					elem.setAttribute(this.__formatName__( NAME, prefix ), properties[ NAME ] as string);
+					elem.setAttribute(__hj_formatPropertyName__( NAME, prefix ), properties[ NAME ] as string);
 
 				break;
 
@@ -109,7 +128,7 @@ abstract class __HJ_PropertiesManager__
 				prefix = (propName === SpecialProperties.VAR ? "--" : "");
 
 				for(const NAME in properties)
-					content += `${this.__formatName__( NAME, prefix )}:${properties[ NAME ]};`;
+					content += `${__hj_formatPropertyName__( NAME, prefix )}:${properties[ NAME ]};`;
 
 				elem.setAttribute("style", (elem.getAttribute("style") ?? "") + content);
 				break;
@@ -123,25 +142,18 @@ abstract class __HJ_PropertiesManager__
 
 	protected __setProperties(elem: Element, properties: TDict): void | never
 	{
-		for(const NAME in this.__defaultProperties__)
-			elem.setAttribute( NAME, this.__defaultProperties__[NAME] as string );
+		const DEFAULT_PROPERTIES: TDict = HJDefaultProperties.get(elem.tagName);
+
+		for(const NAME in DEFAULT_PROPERTIES)
+			elem.setAttribute( NAME, DEFAULT_PROPERTIES[ NAME ] as string );
 
 		for(const NAME in properties)
 			if(!this.__setSpecialProperties__(elem, NAME, properties))
-				elem.setAttribute( this.__formatName__( NAME ), properties[NAME] as string );
-	}
-	
-	setDefaultProperties(properties: TDict = {}): void
-	{
-		if(properties === null || typeof properties !== "object")
-			throw new TypeError("Expecting: OBJECT.");
-
-		for(const PROP in properties)
-			this.__defaultProperties__[ this.__formatName__( PROP ) ] = properties[PROP];
+				elem.setAttribute( __hj_formatPropertyName__( NAME ), properties[NAME] as string );
 	}
 }
 
-class HJCreateInlineElement extends __HJ_PropertiesManager__
+class __HJ_InlineElement__ extends __HJ_PropertiesManager__
 {
 	constructor()
 	{
@@ -158,7 +170,7 @@ class HJCreateInlineElement extends __HJ_PropertiesManager__
 	}
 }
 
-class HJCreateBlockElement extends __HJ_PropertiesManager__
+class __HJ_BlockElement__ extends __HJ_PropertiesManager__
 {
 	constructor()
 	{
