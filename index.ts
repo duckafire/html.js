@@ -79,6 +79,9 @@ class HJDefaultProperties
 
 		tagName = tagName.toUpperCase();
 
+		if(this.__list__[tagName] === undefined)
+			this.__list__[tagName] = {};
+
 		for(const PROP in properties)
 			this.__list__[tagName][ __hj_formatPropertyName__( PROP ) ] = properties[PROP];
 	}
