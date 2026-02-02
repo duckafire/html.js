@@ -42,7 +42,7 @@ type TAttrDict = Record<string, string | TSpecDict>;
 // }} }
 type TElemAttr = Record<string, TAttrDict>;
 
-const enum SpecialProperties
+const enum SpecialAttributes
 {
 	ARIA  = "_aria",
 	DATA  = "_data",
@@ -51,13 +51,13 @@ const enum SpecialProperties
 	VAR   = "_var",
 }
 
-const __hj_formatPropertyName__ = (name: string, prefix: string = null): string =>
+const __hj_formatAttributeName__ = (name: string, prefix: string = null): string =>
 {
 	if(name.charAt(0) === "-")
 		return name;
 
-	// If prefix is null, the property
-	// is a "default property" (from
+	// If prefix is null, the attribute
+	// is a "default attribute" (from
 	// element standard).
 	const WORD_SEPARATOR = (prefix !== null ? "-" : "");
 
@@ -80,7 +80,7 @@ const __hj_formatPropertyName__ = (name: string, prefix: string = null): string 
 	return result;
 };
 
-class HJDefaultProperties
+class HJDefaultAttributes
 {
 	private static __list__: TElemAttr = {};
 
@@ -94,14 +94,14 @@ class HJDefaultProperties
 			if(this.__list__[TAG_NAME] === undefined)
 				this.__list__[TAG_NAME] = {};
 
-			for(const PROP in list[ TAG_NAME ])
-				this.__list__[TAG_NAME][ __hj_formatPropertyName__( PROP ) ] = list[ TAG_NAME ][ PROP ];
+			for(const ATTR in list[ TAG_NAME ])
+				this.__list__[TAG_NAME][ __hj_formatAttributeName__( ATTR ) ] = list[ TAG_NAME ][ ATTR ];
 		}
 	}
 
 	static get(tagName: string): TAttrDict
 	{
-		return HJDefaultProperties.__list__[ tagName.toUpperCase() ] ?? {};
+		return HJDefaultAttributes.__list__[ tagName.toUpperCase() ] ?? {};
 	}
 
 	static unset(list: Record<string, string[]>): void | never
@@ -110,52 +110,52 @@ class HJDefaultProperties
 			throw new TypeError("Expecting: OBJECT.");
 
 		for(const TAG_NAME in list)
-			for(const PROP of list[ TAG_NAME ])
-				delete HJDefaultProperties.__list__[TAG_NAME][ __hj_formatPropertyName__(PROP) ];
+			for(const ATTR of list[ TAG_NAME ])
+				delete HJDefaultAttributes.__list__[TAG_NAME][ __hj_formatAttributeName__(ATTR) ];
 	}
 }
 
-abstract class __HJ_PropertiesManager__
+abstract class __HJ_AttributesManager__
 {
 	// Return true if it is defined.
-	private __setSpecialProperties__(elem: Element, propName: string, properties: TSpecDict): boolean | never
+	private __setSpecialAttributes__(elem: Element, attrName: string, attributes: TSpecDict): boolean | never
 	{
-		// ALL special properties start with "_".
-		if(propName.charAt(0) !== "_")
+		// ALL special attributes start with "_".
+		if(attrName.charAt(0) !== "_")
 			return false;
 
 		let prefix: string;
 
-		switch(propName)
+		switch(attrName)
 		{
-			case SpecialProperties.ARIA:
-			case SpecialProperties.DATA:
-				prefix = propName.slice(1) + "-"; // removes "_".
+			case SpecialAttributes.ARIA:
+			case SpecialAttributes.DATA:
+				prefix = attrName.slice(1) + "-"; // removes "_".
 
-				for(const NAME in properties)
-					elem.setAttribute(__hj_formatPropertyName__( NAME, prefix ), properties[ NAME ]);
+				for(const NAME in attributes)
+					elem.setAttribute(__hj_formatAttributeName__( NAME, prefix ), attributes[ NAME ]);
 
 				break;
 
-			case SpecialProperties.EVENT:
-				for(const EV_NAME in properties)
+			case SpecialAttributes.EVENT:
+				for(const EV_NAME in attributes)
 				{
-					if(!Array.isArray( properties[ EV_NAME ] ))
-						elem.addEventListener(EV_NAME, properties[ EV_NAME ]);
+					if(!Array.isArray( attributes[ EV_NAME ] ))
+						elem.addEventListener(EV_NAME, attributes[ EV_NAME ]);
 					else
-						for(const BEHAVIOR of properties[EV_NAME])
+						for(const BEHAVIOR of attributes[EV_NAME])
 							elem.addEventListener(EV_NAME, BEHAVIOR);
 				}
 
 				break;
 
-			case SpecialProperties.STYLE:
-			case SpecialProperties.VAR:
+			case SpecialAttributes.STYLE:
+			case SpecialAttributes.VAR:
 				let content : string = "";
-				prefix = (propName === SpecialProperties.VAR ? "--" : "");
+				prefix = (attrName === SpecialAttributes.VAR ? "--" : "");
 
-				for(const NAME in properties)
-					content += `${__hj_formatPropertyName__( NAME, prefix )}:${properties[ NAME ]};`;
+				for(const NAME in attributes)
+					content += `${__hj_formatAttributeName__( NAME, prefix )}:${attributes[ NAME ]};`;
 
 				elem.setAttribute("style", (elem.getAttribute("style") ?? "") + content);
 				break;
@@ -167,37 +167,37 @@ abstract class __HJ_PropertiesManager__
 		return true;
 	}
 
-	protected __setProperties(elem: Element, properties: TAttrDict): void | never
+	protected __setAttributes(elem: Element, attributes: TAttrDict): void | never
 	{
-		const DEFAULT_PROPERTIES: TAttrDict = HJDefaultProperties.get(elem.tagName);
+		const DEFAULT_ATTRIBUTES: TAttrDict = HJDefaultAttributes.get(elem.tagName);
 
-		for(const NAME in DEFAULT_PROPERTIES)
-			elem.setAttribute( NAME, DEFAULT_PROPERTIES[ NAME ] as string);
+		for(const NAME in DEFAULT_ATTRIBUTES)
+			elem.setAttribute( NAME, DEFAULT_ATTRIBUTES[ NAME ] as string);
 
-		for(const NAME in properties)
-			if(!this.__setSpecialProperties__(elem, NAME, properties[NAME] as TSpecDict))
-				elem.setAttribute( __hj_formatPropertyName__( NAME ), properties[NAME] as string);
+		for(const NAME in attributes)
+			if(!this.__setSpecialAttributes__(elem, NAME, attributes[NAME] as TSpecDict))
+				elem.setAttribute( __hj_formatAttributeName__( NAME ), attributes[NAME] as string);
 	}
 }
 
-class __HJ_InlineElement__ extends __HJ_PropertiesManager__
+class __HJ_InlineElement__ extends __HJ_AttributesManager__
 {
 	constructor()
 	{
 		super();
 	}
 
-	createElement(tagName: string, properties: TAttrDict = {}): Element | never
+	createElement(tagName: string, attributes: TAttrDict = {}): Element | never
 	{
 		const ELEM = document.createElement(tagName);
 		
-		this.__setProperties(ELEM, properties);
+		this.__setAttributes(ELEM, attributes);
 
 		return ELEM;
 	}
 }
 
-class __HJ_BlockElement__ extends __HJ_PropertiesManager__
+class __HJ_BlockElement__ extends __HJ_AttributesManager__
 {
 	constructor()
 	{
@@ -235,11 +235,11 @@ class __HJ_BlockElement__ extends __HJ_PropertiesManager__
 			elem.appendChild( document.createTextNode( textNode ) );
 	}
 
-	createElement(tagName: string, properties: TAttrDict = {}, ...children: TChildren): Element | never
+	createElement(tagName: string, attributes: TAttrDict = {}, ...children: TChildren): Element | never
 	{
 		const ELEM = document.createElement(tagName);
 		
-		this.__setProperties(   ELEM, properties);
+		this.__setAttributes(   ELEM, attributes);
 		this.__insertChildren__(ELEM, children);
 
 		return ELEM;
@@ -247,8 +247,8 @@ class __HJ_BlockElement__ extends __HJ_PropertiesManager__
 }
 
 for(const TAG of ["AREA", "BASE", "BR", "COL", "HR", "IMG", "INPUT", "LINK", "META", "SOURCE", "TRACK", "WBR"])
-	window[TAG] = (properties?: TAttrDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, properties);
+	window[TAG] = (attributes?: TAttrDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, attributes);
 
 for(const TAG of ["A", "ABBR", "ADDRESS", "ARTICLE", "AUDIO", "B", "BDI", "BDO", "BLOCKQUOTE", "BODY", "BUTTON", "CANVAS", "CAPTION", "CITE", "CODE", "COLGROUP", "DATA", "DATALIST", "DD", "DEL", "DETAILS", "DFN", "DIALOG", "DIV", "DL", "DT", "EM", "FIELDSET", "FIGCAPTION", "FIGURE", "FOOTER", "FORM", "H1", "H2", "H3", "H4", "H5", "H6", "HEAD", "HEADER", "HGROUP", "HTML", "I", "IFRAME", "INS", "KBD", "LABEL", "LEGEND", "LI", "MAIN", "MAP", "MARK", "METER", "NAV", "NOSCRIPT", "OBJECT", "OL", "OPTGROUP", "OPTION", "OUTPUT", "P", "PICTURE", "PRE", "PROGRESS", "Q", "RP", "RT", "RUBY", "SAMP", "SCRIPT", "SECTION", "SELECT", "SMALL", "SPAN", "STRONG", "SUB", "SUMMARY", "SUP", "TABLE", "TBODY", "TD", "TEMPLATE", "TEXTAREA", "TFOOT", "TH", "THEAD", "TIME", "TITLE", "TR", "UL", "VARI", "VIDEO"])
-	window[TAG] = (properties?: TAttrDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, properties, ...children);
+	window[TAG] = (attributes?: TAttrDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, attributes, ...children);
 
