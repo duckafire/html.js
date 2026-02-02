@@ -133,13 +133,13 @@ abstract class __HJ_PropertiesManager__
 				break;
 
 			case SpecialProperties.EVENT:
-				for(const PAIR in properties)
+				for(const EV_NAME in properties)
 				{
-					if(!Array.isArray(PAIR[1]))
-						elem.addEventListener(PAIR[0] as keyof ElementEventMap, PAIR[1] as unknown as EventListener);
+					if(!Array.isArray( properties[ EV_NAME ] ))
+						elem.addEventListener(EV_NAME, properties[ EV_NAME ]);
 					else
-						for(const BEHAVIOR of PAIR[1])
-							elem.addEventListener(PAIR[0], BEHAVIOR);
+						for(const BEHAVIOR of properties[EV_NAME])
+							elem.addEventListener(EV_NAME, BEHAVIOR);
 				}
 
 				break;
