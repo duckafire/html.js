@@ -26,9 +26,10 @@
     "url": "git+https://github.com/duckafire/html.js.git"
   },
   "scripts": {
-    "compile": "npx tsc",
-    "compress": "npx terser index.js -o index.min.js --compress --mangle",
-    "build": "npm run compile && npm run compress"
+    "compile": "tsc",
+    "compress": "terser index.js -o index.min.js --compress --mangle",
+    "build": "npm compile && npm compress",
+    "b-build": "bun compile && bun compress"
   },
   "files": [
     "LICENSE",
