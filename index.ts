@@ -23,10 +23,13 @@
 // P( null, <...CHILDREN>, <TAG-CLOSER>)
 type TChildren = [] | Element[] | [...Array<Element>, Function];
 
+type TStrDict = Record<string, string>;
+type TEvDict  = Record<keyof ElementEventMap, EventListener | EventListener[]>;
+
 // { display: "inline-block" }
 // { click: ()=>0 }
 // { click: [ ()=>1, ()=>2 ] }
-type TSpecDict = Record<string, string> | Record<keyof ElementEventMap, EventListener | EventListener[]>;
+type TSpecDict = TStrDict | TEvDict;
 
 // {
 //   title: "lorem",
@@ -134,18 +137,21 @@ abstract class __HJ_AttributesManager__
 				prefix = attrName.slice(1) + "-"; // removes "_".
 
 				for(const NAME in attributes)
-					elem.setAttribute(__hj_formatAttributeName__( NAME, prefix ), attributes[ NAME ]);
+					elem.setAttribute(__hj_formatAttributeName__( NAME, prefix ), (attributes as TStrDict)[ NAME ]);
 
 				break;
 
 			case SpecialAttributes.EVENT:
 				for(const EV_NAME in attributes)
 				{
-					if(!Array.isArray( attributes[ EV_NAME ] ))
-						elem.addEventListener(EV_NAME, attributes[ EV_NAME ]);
+					if(!Array.isArray( (attributes as unknown as TStrDict)[ EV_NAME ] ))
+						elem.addEventListener(EV_NAME, (attributes as unknown as TStrDict)[ EV_NAME ] as unknown as EventListener);
 					else
-						for(const BEHAVIOR of attributes[EV_NAME])
-							elem.addEventListener(EV_NAME, BEHAVIOR);
+						for(const BEHAVIOR of (attributes as unknown as TStrDict)[EV_NAME])
+							elem.addEventListener(EV_NAME, BEHAVIOR as unknown as EventListener);
+					// NOTE: I REALLY did not use `as unknown as`,
+					// but "TS7053" forced me!
+					// (now I HATE much more the TS verbosity!!)
 				}
 
 				break;
@@ -156,7 +162,7 @@ abstract class __HJ_AttributesManager__
 				prefix = (attrName === SpecialAttributes.VAR ? "--" : "");
 
 				for(const NAME in attributes)
-					content += `${__hj_formatAttributeName__( NAME, prefix )}:${attributes[ NAME ]};`;
+					content += `${__hj_formatAttributeName__( NAME, prefix )}:${(attributes as TStrDict)[ NAME ]};`;
 
 				elem.setAttribute("style", (elem.getAttribute("style") ?? "") + content);
 				break;
@@ -247,9 +253,14 @@ class __HJ_BlockElement__ extends __HJ_AttributesManager__
 	}
 }
 
+// NOTE: I used `as any` below because it is much
+// verbose, and debatably unnecessary, to create
+// a set of types to declare just these "global
+// functions". In addition, your provable NEVER
+// will need to edit this snippet (I hope).
 for(const TAG of ["AREA", "BASE", "BR", "COL", "HR", "IMG", "INPUT", "LINK", "META", "SOURCE", "TRACK", "WBR"])
-	window[TAG] = (attributes?: TAttrDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, attributes);
+	window[TAG as any] = ((attributes?: TAttrDict): Element | never => __HJ_InlineElement__.prototype.createElement(TAG, attributes)) as any;
 
 for(const TAG of ["A", "ABBR", "ADDRESS", "ARTICLE", "AUDIO", "B", "BDI", "BDO", "BLOCKQUOTE", "BODY", "BUTTON", "CANVAS", "CAPTION", "CITE", "CODE", "COLGROUP", "DATA", "DATALIST", "DD", "DEL", "DETAILS", "DFN", "DIALOG", "DIV", "DL", "DT", "EM", "FIELDSET", "FIGCAPTION", "FIGURE", "FOOTER", "FORM", "H1", "H2", "H3", "H4", "H5", "H6", "HEAD", "HEADER", "HGROUP", "HTML", "I", "IFRAME", "INS", "KBD", "LABEL", "LEGEND", "LI", "MAIN", "MAP", "MARK", "METER", "NAV", "NOSCRIPT", "OBJECT", "OL", "OPTGROUP", "OPTION", "OUTPUT", "P", "PICTURE", "PRE", "PROGRESS", "Q", "RP", "RT", "RUBY", "SAMP", "SCRIPT", "SECTION", "SELECT", "SMALL", "SPAN", "STRONG", "SUB", "SUMMARY", "SUP", "TABLE", "TBODY", "TD", "TEMPLATE", "TEXTAREA", "TFOOT", "TH", "THEAD", "TIME", "TITLE", "TR", "UL", "VARI", "VIDEO"])
-	window[TAG] = (attributes?: TAttrDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, attributes, ...children);
+	window[TAG as any] = ((attributes?: TAttrDict, ...children: TChildren): Element | never => __HJ_BlockElement__.prototype.createElement(TAG, attributes, ...children)) as any;
 
