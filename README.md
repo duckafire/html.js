@@ -1,4 +1,4 @@
-[code-eg]: ./example.html "It does not work in NPM Registry"
+[code-eg]: ./example.html "Go to GitHub repository"
 [aria-attr]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA "Mozilla docs: Accessible Rich Internet Applications"
 [data-attr]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/data-* "Mozilla docs: HTML attributes data-*"
 [event-list]: https://www.w3schools.com/js/js_htmldom_eventlistener.asp "W3 docs: DOM Event Listeners"

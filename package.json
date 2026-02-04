@@ -1,7 +1,7 @@
 {
   "name": "@duckafire/html.js",
   "author": "duckafire",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Zlib",
   "main": "index.min.js",
   "description": "Just a very simple components library.",
