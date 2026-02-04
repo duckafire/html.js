@@ -4,11 +4,12 @@
     "module": "none",
     "rootDir": ".",
     "outDir": ".",
-    "strictNullChecks": false,
+    "declaration": true,
+    "declarationMap": false,
     "strict": true,
+    "strictNullChecks": false,
     "skipLibCheck": true,
-    "noImplicitOverride": true,
-    "declaration": true
+    "noImplicitOverride": true
   },
   "files": ["index.ts"]
 }
