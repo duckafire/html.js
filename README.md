@@ -21,7 +21,7 @@ This is a WEB component library thought to be:
 
 ``` html
 <!-- CDN URL -->
-<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@1/html.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@duckafire/html.js@1/index.min.js"></script>
 ```
 
 ## FAQ
